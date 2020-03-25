@@ -3,4 +3,6 @@
     <color name="colorPrimary">#EFEFEF</color>
     <color name="colorPrimaryDark">#303030</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorGray">#808080</color>
+    <color name="cta_blue">#0095F6</color>
 </resources>

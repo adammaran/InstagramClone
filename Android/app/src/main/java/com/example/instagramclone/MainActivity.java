@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.instagramclone.Fragments.FeedFragment;
+import com.example.instagramclone.Fragments.UserProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                         else
                             bottomMenu.findItem(R.id.action_userProfile).setIcon(R.drawable.ic_person_gray_unselected);
                         //todo add user fragment and icon
+                        loadFragment(new UserProfileFragment());
                         break;
                 }
                 return false;
