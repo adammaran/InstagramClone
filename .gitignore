@@ -83,3 +83,25 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+# dependencies
+node_modules
+
+Backend/materials
+Backend/uploads
+
+# IDEs and editors
+.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
