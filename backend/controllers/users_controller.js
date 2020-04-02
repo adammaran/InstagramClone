@@ -34,6 +34,25 @@ exports.create = async (req, res) => {
     }
 };
 
+exports.uploadAvatar = async (req, res) => {
+    try {
+        let user = await User.findById(req.user._id);
+
+        if (!user) {
+            return res.status(404).send();
+        }
+
+        user.avatar = req.file.buffer;
+
+        await user.save();
+
+        return res.status(201).send(user);
+    } catch (ex) {
+        console.log(ex);
+        return res.status(500).send(ex.message);
+    }
+};
+
 exports.getUser = async (req, res) => {
     try {
         const user = User.findById(req.user._id).select('-__v -lessons -freeLessonTaken -password -active');
@@ -42,11 +61,11 @@ exports.getUser = async (req, res) => {
             return res.status(404).send();
         }
 
-        res.send(user);
+        res.status(200).send(user);
     } catch (ex) {
         res.status(500).send();
     }
-}
+};
 
 exports.findbyId = async (req, res) => {
     try {
@@ -56,9 +75,9 @@ exports.findbyId = async (req, res) => {
             return res.status(404).send();
         }
 
-        return res.send(user);
+        return res.status(200).send(user);
     } catch (ex) {
         console.log(ex);
         return res.status(500).send();
     }
-}
+};

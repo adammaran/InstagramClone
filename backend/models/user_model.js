@@ -50,9 +50,8 @@ const schema = new mongoose.Schema({
     posts: {
         type: [postSchema],
     },
-    avatarPath: {
-        type: String,
-        default: 'uploads/default_avatar.png'
+    avatar: {
+        type: Buffer
     },
     following: {
         type: [String]

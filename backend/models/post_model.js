@@ -46,9 +46,9 @@ const schema = new mongoose.Schema({
         type: String,
         maxlength: 500
     },
-    imagePath: {
-        type: String,
-        required: true
+    image: {
+        data: Buffer,
+        contentType: String
     },
     likes: {
         type: [likeSchema]
