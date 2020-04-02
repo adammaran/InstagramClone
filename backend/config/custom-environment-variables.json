@@ -1,3 +1,4 @@
 {
-  "jwtPrivateKey": "instagram_jwtPrivateKey"
+  "jwtPrivateKey": "instagram_jwtPrivateKey",
+  "mongodb_url": "instagram_mongodb"
 }

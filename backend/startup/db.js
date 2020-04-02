@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+const config = require("config");
 
 module.exports = function () {
-    mongoose.connect('mongodb://localhost:27017/instagram', {
+    mongoose.connect(config.get('mongodb_url'), {
         useNewUrlParser: true,
         useCreateIndex: true,
         useUnifiedTopology: true 
