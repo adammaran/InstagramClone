@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const moment = require("moment");
 
 const likeSchema = new mongoose.Schema({
-    user_id: {
+    username: {
         type: String,
         required: true
     },
@@ -14,7 +14,7 @@ const likeSchema = new mongoose.Schema({
 });
 
 const commentSchema = new mongoose.Schema({
-    user_id: {
+    username: {
         type: String,
         required: true
     },
@@ -23,14 +23,14 @@ const commentSchema = new mongoose.Schema({
         required: true,
         default: () => moment().format()
     },
-    body: {
+    comment: {
         type: String,
         required: true,
         maxlength: 500
     }
 });
 
-const schema = new mongoose.Schema({
+const postSchema = new mongoose.Schema({
     user_id: {
         type: String,
         required: true
@@ -57,6 +57,10 @@ const schema = new mongoose.Schema({
     }
 });
 
-const Post = mongoose.model('Post', schema);
+const Post = mongoose.model('Post', postSchema);
+const Like = mongoose.model('Like', likeSchema);
+const Comment = mongoose.model('Comment', commentSchema);
 
 exports.Post = Post;
+exports.Like = Like;
+exports.Comment = Comment;

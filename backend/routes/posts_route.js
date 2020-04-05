@@ -8,5 +8,7 @@ const timeZone = require("../middlewares/timeZoneMiddleware");
 router.post('/', auth, posts.create);
 router.get('/', auth, posts.getAll);
 router.post('/create', auth, image.upload.single('image'), posts.create);
+router.post('/like', auth, posts.like);
+router.post('/comment', auth, posts.comment);
 
 module.exports = router;
