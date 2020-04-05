@@ -2,11 +2,11 @@ const app = require('express')();
 const http = require('http').Server(app);
 
 // Connect mongodb
-require("./startup/db")();
+require("../src/startup/db")();
 
 // Load routes
-require("./startup/routes")(app);
-require("./startup/config")();
+require("../src/startup/routes")(app);
+require("../src/startup/config")();
 
 // Start express server
 const port = process.env.PORT || 3000;

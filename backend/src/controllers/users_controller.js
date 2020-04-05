@@ -53,20 +53,6 @@ exports.uploadAvatar = async (req, res) => {
     }
 };
 
-exports.getUser = async (req, res) => {
-    try {
-        const user = User.findById(req.user._id).select('-__v -lessons -freeLessonTaken -password -active');
-
-        if (!user) {
-            return res.status(404).send();
-        }
-
-        res.status(200).send(user);
-    } catch (ex) {
-        res.status(500).send();
-    }
-};
-
 exports.findbyId = async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
