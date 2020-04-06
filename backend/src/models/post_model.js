@@ -47,7 +47,8 @@ const postSchema = new mongoose.Schema({
         maxlength: 500
     },
     image: {
-        type: Buffer
+        type: Buffer,
+        required: true
     },
     likes: {
         type: [likeSchema]
