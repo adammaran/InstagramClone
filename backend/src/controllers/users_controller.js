@@ -16,7 +16,7 @@ exports.create = async (req, res) => {
         if (await User.findOne({ email: req.body.email }))
             return res.status(400).send('Uneta e-mail adresa već postoji.');
 
-        user = new User(_.pick(req.body, ['username', 'name', 'lastName', 'email', 'password']));
+        user = new User(req.body);
         const salt = await bcrypt.genSalt(10);
 
         user.password = await bcrypt.hash(user.password, salt);
@@ -29,7 +29,7 @@ exports.create = async (req, res) => {
             token: user.generateAccessToken()
         };
 
-        return res.status(201).send({ token, user });
+        return res.status(201).send(token);
     } catch (ex) {
         console.log(ex);
         return res.status(500).send(ex.message);
