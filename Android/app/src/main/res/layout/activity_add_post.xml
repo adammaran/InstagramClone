@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.MainActivity">
+    android:background="@color/colorPrimary"
+    tools:context=".Activities.AddPostActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/feed_toolbar.wrap"
+        android:id="@+id/addPost_toolbar.wrap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -46,22 +47,13 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/feed_toolbar.wrap" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/addPost_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_below="@+id/addPost_toolbar.wrap"
+        android:maxHeight="400dp"
+        android:src="@drawable/placeholder" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/feed_bottomNav"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:background="@color/colorPrimary"
-        android:elevation="0dp"
-        app:itemIconSize="32dp"
-        app:itemIconTint="@color/colorPrimaryDark"
-        app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/bottom_nav_menu" />
 </RelativeLayout>

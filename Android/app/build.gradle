@@ -42,4 +42,11 @@ dependencies {
 
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+
+    // OkHttp
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.5.0'
 }

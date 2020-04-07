@@ -1,20 +1,37 @@
 package com.example.instagramclone.Models;
 
-public class UserModel {
-    private String userUUID;
-    private String userName;
-    private String email;
-    private String avatarURL;
-    private String fullName;
-    private String bio;
-    private int postCount;
-    private int followerCount;
-    private int followingCount;
+import com.google.gson.annotations.SerializedName;
 
-    public UserModel(String userUUID, String userName, String email, String avatarURL, String fullName, String bio, int postCount, int followerCount, int followingCount) {
-        this.userUUID = userUUID;
+public class UserModel {
+    @SerializedName("username")
+    private String userName;
+
+    @SerializedName("email")
+    private String email;
+
+    @SerializedName("password")
+    private String password;
+
+    @SerializedName("avatarURL")
+    private String avatarURL;
+
+    @SerializedName("fullName")
+    private String fullName;
+
+    @SerializedName("bio")
+    private String bio;
+
+    private Integer postCount;
+    private Integer followerCount;
+    private Integer followingCount;
+
+    public UserModel() {
+    }
+
+    public UserModel(String userName, String email, String password, String avatarURL, String fullName, String bio, int postCount, int followerCount, int followingCount) {
         this.userName = userName;
         this.email = email;
+        this.password = password;
         this.avatarURL = avatarURL;
         this.fullName = fullName;
         this.bio = bio;
@@ -23,12 +40,11 @@ public class UserModel {
         this.followingCount = followingCount;
     }
 
-    public String getUserUUID() {
-        return userUUID;
-    }
-
-    public void setUserUUID(String userUUID) {
-        this.userUUID = userUUID;
+    public UserModel(String userName, String email, String password, String fullName) {
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
     }
 
     public String getUserName() {
@@ -45,6 +61,14 @@ public class UserModel {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getAvatarURL() {

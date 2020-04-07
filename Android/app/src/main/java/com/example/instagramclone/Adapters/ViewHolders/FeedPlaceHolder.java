@@ -1,6 +1,9 @@
 package com.example.instagramclone.Adapters.ViewHolders;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -9,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.instagramclone.Common.Data;
 import com.example.instagramclone.Models.FeedItemModel;
 import com.example.instagramclone.R;
 import com.squareup.picasso.Picasso;
@@ -42,7 +46,12 @@ public class FeedPlaceHolder extends RecyclerView.ViewHolder {
         Picasso.get().load(feedItem.getUser().getAvatarURL()).into(avatar);
         username.setText(feedItem.getUser().getUserName());
         location.setText("Unknown for now");
-        Picasso.get().load(feedItem.getImageURL()).into(image);
+
+        byte[] decodedString = Base64.decode(Data.getTestImage(), Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        image.setImageBitmap(bitmap);
+
+//        Picasso.get().load(feedItem.getImageURL()).into(image);
         likeCount.setText(Integer.toString(feedItem.getLikeCount()));
         description.setText(feedItem.getDescription());
         time.setText("Placeholder");

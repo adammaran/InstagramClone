@@ -1,16 +1,24 @@
-package com.example.instagramclone;
+package com.example.instagramclone.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.instagramclone.Fragments.FeedFragment;
 import com.example.instagramclone.Fragments.UserProfileFragment;
+import com.example.instagramclone.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,8 +61,7 @@ public class MainActivity extends AppCompatActivity {
                         //todo add search fragment and icon
                         break;
                     case R.id.action_add:
-//                        bottomMenu.findItem(R.id.action_add).setIcon(R.drawable.ic_add_box_gray_unselected);
-                        //todo add add fragment and icon
+                        startCamera();
                         break;
                     case R.id.action_notifications:
                         if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_notifications_gary_unselected).getConstantState()))
@@ -75,6 +82,11 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    private void startCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, 0);
     }
 
     private boolean loadFragment(Fragment fragment) {
@@ -98,4 +110,23 @@ public class MainActivity extends AppCompatActivity {
         bottomMenu.findItem(R.id.action_userProfile).setIcon(R.drawable.ic_person_gray_unselected);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+        addImageToDisk(bitmap);
+        Intent intent = new Intent(this, AddPostActivity.class);
+        startActivity(intent);
+    }
+
+    private void addImageToDisk(Bitmap bitmap) {
+        try {
+            FileOutputStream stream = this.openFileOutput("new_image", Context.MODE_PRIVATE);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            stream.close();
+            bitmap.recycle();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

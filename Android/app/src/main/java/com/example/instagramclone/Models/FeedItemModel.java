@@ -1,6 +1,7 @@
 package com.example.instagramclone.Models;
 
 public class FeedItemModel {
+
     private String feedUUID;
     private UserModel user;
     private int likeCount;
