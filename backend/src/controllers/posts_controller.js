@@ -11,9 +11,6 @@ exports.create = async (req, res) => {
         post.user_id = user._id;
         post.image = req.file.buffer;
 
-        if (user.isPrivate)
-            post.isPrivate = true;
-
         await post.save();
 
         return res.status(201).send(post);

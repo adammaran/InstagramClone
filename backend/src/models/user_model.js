@@ -2,15 +2,9 @@ const Joi = require("@hapi/joi");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const config = require("config");
-const { postSchema } = require('./post_model');
 
 const schema = new mongoose.Schema({
-    name: {
-        type: String,
-        minlength: 2,
-        maxlength: 225
-    },
-    lastName: {
+    fullName: {
         type: String,
         minlength: 2,
         maxlength: 225
@@ -47,9 +41,6 @@ const schema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    posts: {
-        type: [postSchema],
-    },
     avatar: {
         type: Buffer
     },
@@ -71,11 +62,11 @@ const User = mongoose.model('User', schema);
 
 const validateUser = (user) => {
     const schema = Joi.object({
-        name: Joi.string().min(2).max(225),
-        lastName: Joi.string().min(2).max(225),
+        fullName: Joi.string().min(2).max(225),
         email: Joi.string().min(4).max(225).required().email(),
         password: Joi.string().regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/),
-        username: Joi.string().min(3).max(60).required()
+        username: Joi.string().min(3).max(60).required(),
+        bio: Joi.string().max(500)
     });
 
     return schema.validate(user);
