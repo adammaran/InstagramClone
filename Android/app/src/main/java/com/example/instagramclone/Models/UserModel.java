@@ -25,7 +25,9 @@ public class UserModel {
     private Integer followerCount;
     private Integer followingCount;
 
-    public UserModel() {
+    public UserModel(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     public UserModel(String userName, String email, String password, String avatarURL, String fullName, String bio, int postCount, int followerCount, int followingCount) {

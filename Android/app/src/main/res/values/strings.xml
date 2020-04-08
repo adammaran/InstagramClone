@@ -17,4 +17,7 @@
     <string name="password">Password</string>
     <string name="sign_up">Sign up</string>
 
+    <!--    Login-->
+    <string name="login">Log In</string>
+
 </resources>

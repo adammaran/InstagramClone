@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.instagramclone.Api.UserApi;
 import com.example.instagramclone.Common.APIClient;
@@ -22,48 +23,50 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RegistrationActivity extends AppCompatActivity {
-    private static final String TAG = "RegistrationActivity";
+public class LoginActivity extends AppCompatActivity {
+    private static final String TAG = "LoginActivity";
 
-    private EditText email;
-    private EditText fullname;
     private EditText username;
     private EditText password;
-    private Button signUpButton;
+    private Button loginButton;
+    private TextView signUpText;
 
     private UserApi userApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
-
+        setContentView(R.layout.activity_login);
         initComponents();
         initData();
     }
 
     private void initComponents() {
-        email = findViewById(R.id.registration_email);
-        fullname = findViewById(R.id.registration_fullname);
-        username = findViewById(R.id.registration_username);
-        password = findViewById(R.id.registration_password);
-        signUpButton = findViewById(R.id.registration_btn_signup);
+        username = findViewById(R.id.login_username);
+        password = findViewById(R.id.login_password);
+        loginButton = findViewById(R.id.login_btn_login);
+        signUpText = findViewById(R.id.login_text_signin);
     }
 
     private void initData() {
         userApi = APIClient.getClient().create(UserApi.class);
-        signUpButton.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                postUser();
+                checkUserInfo();
+            }
+        });
+        signUpText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startRegistraionActivity();
             }
         });
     }
 
-
-    private void postUser() {
-        UserModel user = new UserModel(username.getText().toString(), email.getText().toString(), password.getText().toString(), fullname.getText().toString());
-        Call<TokenModel> call = userApi.postUser(user);
+    private void checkUserInfo() {
+        UserModel user = new UserModel(username.getText().toString(), password.getText().toString());
+        Call<TokenModel> call = userApi.getUser(user);
         call.enqueue(new Callback<TokenModel>() {
             @Override
             public void onResponse(Call<TokenModel> call, Response<TokenModel> response) {
@@ -71,17 +74,20 @@ public class RegistrationActivity extends AppCompatActivity {
                     storeToken(response.body().getToken());
                     startMainActivity();
                 } else {
-                    Snackbar.make(findViewById(R.id.registration_password), "Something went wrong", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(R.id.login_password), "Something went wrong", Snackbar.LENGTH_LONG).show();
                     Log.e(TAG, Integer.toString(response.code()));
                 }
             }
 
             @Override
             public void onFailure(Call<TokenModel> call, Throwable t) {
-                Snackbar.make(findViewById(R.id.registration_password), "Something went wrong", Snackbar.LENGTH_LONG).show();
-                Log.e(TAG, t.getMessage());
+                Snackbar.make(findViewById(R.id.login_password), "Something went wrong", Snackbar.LENGTH_LONG).show();
+                Log.e(TAG, (t.getMessage()));
             }
         });
+    }
+
+    private void setTextForIncorect() {
     }
 
     private void storeToken(String token) {
@@ -92,8 +98,11 @@ public class RegistrationActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    private void startRegistraionActivity() {
+        startActivity(new Intent(this, RegistrationActivity.class));
+    }
+
     private void startMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

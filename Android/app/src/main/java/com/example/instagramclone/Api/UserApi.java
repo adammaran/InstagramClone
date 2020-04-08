@@ -12,4 +12,7 @@ public interface UserApi {
 
     @POST("users/")
     Call<TokenModel> postUser(@Body UserModel user);
+
+    @POST("auth/login")
+    Call<TokenModel> getUser(@Body UserModel user);
 }
