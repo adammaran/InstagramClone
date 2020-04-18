@@ -109,6 +109,9 @@ exports.deleteComment = async (req, res) => {
 
 exports.getFeed = async (req, res) => {
     try {
+        const itemsPerPage = 20;
+        const page = req.params.page;
+        const range = itemsPerPage * page - itemsPerPage;
         const user = await User.findById(req.user._id);
         const posts = [];
 
@@ -116,7 +119,9 @@ exports.getFeed = async (req, res) => {
 
         posts.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0));
 
-        res.status(200).send(posts);
+        const feed = posts.slice(range, range + itemsPerPage);
+
+        res.status(200).send(feed);
     } catch (ex) {
         console.log(ex);
         return res.status(500).send(ex.message);
