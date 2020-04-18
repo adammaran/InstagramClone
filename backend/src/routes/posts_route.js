@@ -5,7 +5,7 @@ const image = require("../middlewares/imagesMiddleware");
 const auth = require("../middlewares/authMiddleware");
 const timeZone = require("../middlewares/timeZoneMiddleware");
 
-router.get('/feed', auth, posts.getFeed);
+router.get('/feed/:page', auth, posts.getFeed);
 router.post('/create', auth, image.upload.single('image'), posts.create);
 router.patch('/like/:post_id', auth, posts.like);
 router.patch('/unlike/:post_id', auth, posts.unlike);
