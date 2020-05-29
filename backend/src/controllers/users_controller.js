@@ -36,6 +36,77 @@ exports.create = async (req, res) => {
     }
 };
 
+exports.edit = async (req, res) => {
+    try {
+        const user = User.findById(req.user._id);
+
+        if (req.body.username) {
+            if (await User.findOne({ username: req.body.username }))
+                return res.status(400).send('Uneto korisničko ime već postoji.');
+            else
+                user.username = req.body.username;
+        }
+
+        if (req.body.email) {
+            if (await User.findOne({ email: req.body.email }))
+                return res.status(400).send('Uneta e-mail adresa već postoji.');
+            else
+                user.email = req.body.email;
+        }
+
+        if (req.body.fullName)
+            user.fullName = req.body.fullName;
+
+        if (req.body.bio) 
+            user.bio = req.body.bio;
+
+        await user.save();
+
+        return res.status(200).send(user);
+    } catch (ex) {
+        console.log(ex);
+        return res.status(500).send(ex.message);
+    }
+};
+
+exports.togglePrivate = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            return res.status(404).send();
+        }
+
+        user.private = !user.private;
+
+        await user.save();
+
+        return res.status(200).send(user);
+    } catch (ex) {
+        console.log(ex);
+        return res.status(500).send(ex.message);
+    }
+};
+
+exports.toggleActive = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            return res.status(404).send();
+        }
+
+        user.active = !user.active;
+
+        await user.save();
+
+        return res.status(200).send(user);
+    } catch (ex) {
+        console.log(ex);
+        return res.status(500).send(ex.message);
+    }
+};
+
 exports.uploadAvatar = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
