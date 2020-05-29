@@ -20,6 +20,25 @@ exports.create = async (req, res) => {
     }
 };
 
+exports.edit = async (req, res) => {
+    try {
+        const post = Post.findById(req.params.post_id);
+
+        if (req.body.location) 
+            post.location = req.body.location;
+        
+        if (req.body.description) 
+            post.description = req.body.description;
+
+        await post.save();
+
+        return res.status(200).send(post);
+    } catch (ex) {
+        console.log(ex);
+        return res.status(500).send(ex.message);
+    }
+};
+
 exports.like = async (req, res) => {
     try {
         const user = await User.findById(req.user._id).select('username');
@@ -109,13 +128,34 @@ exports.deleteComment = async (req, res) => {
 
 exports.getFeed = async (req, res) => {
     try {
-        const itemsPerPage = 20;
+        const itemsPerPage = 10;
         const page = req.params.page;
         const range = itemsPerPage * page - itemsPerPage;
         const user = await User.findById(req.user._id);
-        const posts = [];
+        const posts = await Post.find();
 
-        user.following.forEach(user => posts.concat(user.posts));
+        posts.filter(post => user.following.includes(post.user_id));
+
+        posts.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0));
+
+        const feed = posts.slice(range, range + itemsPerPage);
+
+        res.status(200).send(feed);
+    } catch (ex) {
+        console.log(ex);
+        return res.status(500).send(ex.message);
+    }
+};
+
+exports.getExplore = async (req, res) => {
+    try {
+        const itemsPerPage = 12;
+        const page = req.params.page;
+        const range = itemsPerPage * page - itemsPerPage;
+        const user = await User.findById(req.user._id);
+        const posts = await Post.find();
+
+        posts.filter(post => !user.following.includes(post.user_id));
 
         posts.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0));
 
