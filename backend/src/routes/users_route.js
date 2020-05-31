@@ -4,7 +4,8 @@ const users = require("../controllers/users_controller");
 const image = require("../middlewares/imagesMiddleware");
 const auth = require("../middlewares/authMiddleware");
 
-router.get('/:username', auth, users.findbyUsername);
+router.get('/search/:username', auth, users.findbyUsername);
+router.get('/', auth, users.getCurrentUser);
 router.post('/', users.create);
 router.patch('/edit', auth, users.edit);
 router.patch('/toggle/private', auth, users.togglePrivate);
