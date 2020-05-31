@@ -38,7 +38,7 @@ exports.create = async (req, res) => {
 
 exports.edit = async (req, res) => {
     try {
-        const user = User.findById(req.user._id);
+        const user = await User.findById(req.user._id);
 
         if (req.body.username) {
             if (await User.findOne({ username: req.body.username }))
@@ -77,7 +77,7 @@ exports.togglePrivate = async (req, res) => {
             return res.status(404).send();
         }
 
-        user.private = !user.private;
+        user.isPrivate = !user.isPrivate;
 
         await user.save();
 
@@ -96,7 +96,7 @@ exports.toggleActive = async (req, res) => {
             return res.status(404).send();
         }
 
-        user.active = !user.active;
+        user.isActive = !user.isActive;
 
         await user.save();
 
