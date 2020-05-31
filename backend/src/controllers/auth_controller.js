@@ -29,6 +29,9 @@ exports.login = async (req, res) => {
   if (!user) {
     return res.status(400).send('Pogrešan email ili lozinka.');
   }
+
+  if (!user.isActive)
+    user.isActive = true;
   
   const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
   if (!isPasswordValid) {
