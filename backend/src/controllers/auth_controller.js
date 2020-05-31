@@ -21,7 +21,7 @@ exports.login = async (req, res) => {
 
   try {
     user = await User.findOne({ email: req.body.email });
-  } catch(ex) {
+  } catch (ex) {
     console.log(ex);
     return res.status(500).send();
   }
@@ -32,15 +32,14 @@ exports.login = async (req, res) => {
 
   if (!user.isActive)
     user.isActive = true;
-  
+
   const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
   if (!isPasswordValid) {
     return res.status(400).send('Pogrešna lozinka.');
   }
 
-  const token = {
-    token: user.generateAccessToken()
-  };
+  const token = user.generateAccessToken();
 
-  res.send(token);
+
+  res.send({ token, user });
 };

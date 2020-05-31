@@ -181,9 +181,22 @@ exports.findbyUsername = async (req, res) => {
     try {
         const user = await User.find({ username: { "$regex": new RegExp(req.params.username.replace(/\s+/g, "\\s+"), "gi") } })
 
-        if (!user) {
+        if (!user)
             return res.status(404).send();
-        }
+
+        return res.status(200).send(user);
+    } catch (ex) {
+        console.log(ex);
+        return res.status(500).send();
+    }
+};
+
+exports.getCurrentUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (!user) 
+            return res.status(404).send();
 
         return res.status(200).send(user);
     } catch (ex) {
