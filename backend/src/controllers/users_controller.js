@@ -29,7 +29,7 @@ exports.create = async (req, res) => {
             token: user.generateAccessToken()
         };
 
-        return res.status(201).send(token);
+        return res.status(201).send({ token, user });
     } catch (ex) {
         console.log(ex);
         return res.status(500).send(ex.message);
@@ -57,7 +57,7 @@ exports.edit = async (req, res) => {
         if (req.body.fullName)
             user.fullName = req.body.fullName;
 
-        if (req.body.bio) 
+        if (req.body.bio)
             user.bio = req.body.bio;
 
         await user.save();
@@ -195,7 +195,7 @@ exports.getCurrentUser = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
 
-        if (!user) 
+        if (!user)
             return res.status(404).send();
 
         return res.status(200).send(user);
