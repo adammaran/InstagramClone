@@ -2,6 +2,7 @@ const moment = require('moment');
 const _ = require("lodash");
 const bcrypt = require("bcryptjs");
 const { User, validateUser } = require("../models/user_model");
+const { Post } = require("../models/post_model");
 
 exports.create = async (req, res) => {
     try {
@@ -204,3 +205,70 @@ exports.getCurrentUser = async (req, res) => {
         return res.status(500).send();
     }
 };
+
+exports.getUserStats = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        const posts = await Post.find({ user_id: req.user._id });
+
+        if (!user)
+            return res.status(404).send();
+
+        return res.status(200).send({
+            posts: posts.length,
+            followers: user.followers.length,
+            following: user.following.length
+        });
+    } catch (ex) {
+        console.log(ex);
+        return res.status(500).send();
+    }
+};
+
+exports.getFollowerList = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        const followers = [];
+
+        if (!user)
+            return res.status(404).send();
+        
+        for (follower of user.followers) {
+            followers.push(getFollowerInfo(follower));
+        }
+
+        return res.status(200).send(followers);
+    } catch (ex) {
+        console.log(ex);
+        return res.status(500).send();
+    }
+};
+
+exports.getFollowingList = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        const following = [];
+
+        if (!user)
+            return res.status(404).send();
+        
+        for (followee of user.following) {
+            following.push(getFollowerInfo(followee));
+        }
+
+        return res.status(200).send(following);
+    } catch (ex) {
+        console.log(ex);
+        return res.status(500).send();
+    }
+};
+
+const getFollowerInfo = async (id) => {
+    try {
+        const user = await User.findById(id);
+
+        return { _id : user._id, username : user.username, fullName: user.fullName, avatar : user.avatar };
+    } catch (ex) {
+        console.log(ex);
+    }
+}
