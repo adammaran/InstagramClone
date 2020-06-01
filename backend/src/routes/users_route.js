@@ -13,8 +13,8 @@ router.patch('/toggle/active', auth, users.toggleActive);
 router.post('/avatar', auth, image.upload.single('avatar'), users.uploadAvatar);
 router.patch('/follow/:id', auth, users.follow);
 router.patch('/unfollow/:id', auth, users.unfollow);
-router.get('/stats', auth, users.getUserStats);
-router.get('/followers', auth, users.getFollowerList);
-router.get('/following', auth, users.getFollowingList);
+router.get('/stats/:id?', auth, users.getUserStats);
+router.get('/followers/:id?', auth, users.getFollowerList);
+router.get('/following/:id?', auth, users.getFollowingList);
 
 module.exports = router;
