@@ -19,5 +19,11 @@
 
     <!--    Login-->
     <string name="login">Log In</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 
+    <!--    AddPost-->
+    <string name="caption">Write a caption...</string>
+    <string name="location">Select Location</string>
+    <string name="new_post">New Post</string>
 </resources>

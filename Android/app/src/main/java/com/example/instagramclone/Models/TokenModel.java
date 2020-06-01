@@ -1,10 +1,24 @@
 package com.example.instagramclone.Models;
 
-public class TokenModel {
-    private String token;
+import com.google.gson.annotations.SerializedName;
 
-    public TokenModel(String token) {
+public class TokenModel {
+    @SerializedName("token")
+    private String token;
+    @SerializedName("user")
+    private UserModel userModel;
+
+    public TokenModel(String token, UserModel userModel) {
         this.token = token;
+        this.userModel = userModel;
+    }
+
+    public UserModel getCurrentUserModel() {
+        return userModel;
+    }
+
+    public void setCurrentUserModel(UserModel userModel) {
+        this.userModel = userModel;
     }
 
     public String getToken() {

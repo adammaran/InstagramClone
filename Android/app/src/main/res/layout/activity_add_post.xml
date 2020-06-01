@@ -26,23 +26,27 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_camera_alt_gray_24dp" />
+                    android:src="@drawable/quantum_ic_arrow_back_grey600_24" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="50dp"
-                    android:text="@string/toolbar_title"
+                    android:text="@string/new_post"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="22sp" />
 
-                <ImageView
+                <TextView
+                    android:id="@+id/addPost_done"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/addPost_place"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
-                    android:rotation="-35"
-                    android:src="@drawable/ic_send_gray_32dp" />
+                    android:text="Share"
+                    android:textColor="@color/cta_blue"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -51,9 +55,26 @@
         android:id="@+id/addPost_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
         android:layout_below="@+id/addPost_toolbar.wrap"
+        android:adjustViewBounds="true"
         android:maxHeight="400dp"
         android:src="@drawable/placeholder" />
 
+    <EditText
+        android:id="@+id/addPost_caption"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/addPost_image"
+        android:hint="@string/caption"
+        android:textColor="@color/colorPrimaryDark"
+        android:textColorHint="@color/colorGray" />
+
+    <EditText
+        android:id="@+id/addPost_place"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/addPost_caption"
+        android:hint="@string/location"
+        android:textColor="@color/colorPrimaryDark"
+        android:textColorHint="@color/colorGray" />
 </RelativeLayout>

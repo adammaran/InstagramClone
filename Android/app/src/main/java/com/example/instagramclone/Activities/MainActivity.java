@@ -8,22 +8,38 @@ import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.example.instagramclone.Fragments.FeedFragment;
 import com.example.instagramclone.Fragments.UserProfileFragment;
 import com.example.instagramclone.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
+import java.io.File;
 import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
+    private static final int PICK_IMAGE = 100;
+
+    private BottomSheetBehavior bottomSheetBehavior;
+    private LinearLayout bottomSheet;
+    private LinearLayout addFromCamera;
+    private LinearLayout addFromGallery;
 
     private BottomNavigationView bottomNavigationView;
     private Menu bottomMenu;
+
+    private boolean sheetOpened = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +52,58 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.feed_bottomNav);
         bottomMenu = bottomNavigationView.getMenu();
         bottomMenu.getItem(0).setIcon(R.drawable.ic_home_gray_selected);
+        bottomSheet = findViewById(R.id.main_add_sheet);
+        addFromCamera = findViewById(R.id.add_from_camera_button);
+        addFromGallery = findViewById(R.id.add_from_gallery_button);
         loadFragment(new FeedFragment());
         initData();
     }
 
     private void initData() {
         initBottomNavListener();
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setHideable(true);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN && sheetOpened) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    sheetOpened = false;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
+        addFromCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Todo add camera here
+            }
+        });
+
+        addFromGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
+            }
+        });
+
+    }
+
+    private void openGallery() {
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_IMAGE);
+    }
+
+    private void startAddPost(String uri) {
+        Intent intent = new Intent(this, AddPostActivity.class);
+        intent.putExtra("imageUri", uri);
+        startActivity(intent);
     }
 
     private void initBottomNavListener() {
@@ -61,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                         //todo add search fragment and icon
                         break;
                     case R.id.action_add:
-                        startCamera();
+                        setSheetState();
                         break;
                     case R.id.action_notifications:
                         if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_notifications_gary_unselected).getConstantState()))
@@ -76,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                         else
                             bottomMenu.findItem(R.id.action_userProfile).setIcon(R.drawable.ic_person_gray_unselected);
                         //todo add user fragment and icon
-                        loadFragment(new UserProfileFragment());
+                        loadFragment(new UserProfileFragment(true));
                         break;
                 }
                 return false;
@@ -84,9 +146,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void startCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, 0);
+    private void setSheetState() {
+        if (!sheetOpened) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
     }
 
     private boolean loadFragment(Fragment fragment) {
@@ -113,20 +178,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-        addImageToDisk(bitmap);
-        Intent intent = new Intent(this, AddPostActivity.class);
-        startActivity(intent);
-    }
-
-    private void addImageToDisk(Bitmap bitmap) {
-        try {
-            FileOutputStream stream = this.openFileOutput("new_image", Context.MODE_PRIVATE);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            stream.close();
-            bitmap.recycle();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+            startAddPost(data.getData().toString());
         }
     }
 }

@@ -24,7 +24,7 @@ public class Data {
     public static ArrayList<UserModel> getUserList() {
         ArrayList<UserModel> userList = new ArrayList<>();
 
-//        userList.add(new UserModel("123", "adammaran", "adam@adam.com", "https://picsum.photos/536/354", "Adam Maran", "nesto o sebi sta znam", 123, 321, 123));
+        userList.add(new UserModel("123", "adammaran", "adam@adam.com", "https://picsum.photos/536/354", "Adam Maran", "nesto o sebi sta znam", 123, 321, 123));
 //        userList.add(new UserModel("123", "adammaran", "adam@adam.com", "https://picsum.photos/536/354", "Adam Maran", "nesto o sebi sta znam", 123, 321, 123));
 //        userList.add(new UserModel("123", "adammaran", "adam@adam.com", "https://picsum.photos/536/354", "Adam Maran", "nesto o sebi sta znam", 123, 321, 123));
 //        userList.add(new UserModel("123", "adammaran", "adam@adam.com", "https://picsum.photos/536/354", "Adam Maran", "nesto o sebi sta znam", 123, 321, 123));

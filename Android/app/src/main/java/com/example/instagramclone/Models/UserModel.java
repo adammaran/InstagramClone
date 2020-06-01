@@ -21,9 +21,13 @@ public class UserModel {
     @SerializedName("bio")
     private String bio;
 
+
     private Integer postCount;
     private Integer followerCount;
     private Integer followingCount;
+
+    public UserModel() {
+    }
 
     public UserModel(String email, String password) {
         this.email = email;

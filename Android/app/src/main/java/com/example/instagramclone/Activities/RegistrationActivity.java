@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 
 import com.example.instagramclone.Api.UserApi;
 import com.example.instagramclone.Common.APIClient;
+import com.example.instagramclone.Models.CurrentUserModel;
 import com.example.instagramclone.Models.TokenModel;
 import com.example.instagramclone.Models.UserModel;
 import com.example.instagramclone.R;
@@ -52,12 +54,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void initData() {
         userApi = APIClient.getClient().create(UserApi.class);
-        signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postUser();
-            }
-        });
+        signUpButton.setOnClickListener(view -> postUser());
     }
 
 
@@ -69,6 +66,7 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onResponse(Call<TokenModel> call, Response<TokenModel> response) {
                 if (response.isSuccessful()) {
                     storeToken(response.body().getToken());
+                    CurrentUserModel.setInstance(response.body().getCurrentUserModel());
                     startMainActivity();
                 } else {
                     Snackbar.make(findViewById(R.id.registration_password), "Something went wrong", Snackbar.LENGTH_LONG).show();
@@ -85,11 +83,8 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void storeToken(String token) {
-        SharedPreferences settings = getSharedPreferences("RegistrationActivity", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
-
-        editor.putString("JWTtoken", token);
-        editor.apply();
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putString("JWTtoken", token).apply();
+        System.out.println(PreferenceManager.getDefaultSharedPreferences(this).getString("JWTtoken", null) + " a ovaj token");
     }
 
     private void startMainActivity() {
