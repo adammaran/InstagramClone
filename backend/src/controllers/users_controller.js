@@ -208,7 +208,7 @@ exports.getCurrentUser = async (req, res) => {
 
 exports.getUserStats = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id);
+        const user = req.params.id ? await User.findById(req.params.id) : await User.findById(req.user._id);
         const posts = await Post.find({ user_id: req.user._id });
 
         if (!user)
@@ -227,7 +227,7 @@ exports.getUserStats = async (req, res) => {
 
 exports.getFollowerList = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id);
+        const user = req.params.id ? await User.findById(req.params.id) : await User.findById(req.user._id);
         const followers = [];
 
         if (!user)
@@ -246,7 +246,7 @@ exports.getFollowerList = async (req, res) => {
 
 exports.getFollowingList = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id);
+        const user = req.params.id ? await User.findById(req.params.id) : await User.findById(req.user._id);
         const following = [];
 
         if (!user)
