@@ -209,11 +209,12 @@ exports.getCurrentUser = async (req, res) => {
 exports.getUserStats = async (req, res) => {
     try {
         const user = req.params.id ? await User.findById(req.params.id) : await User.findById(req.user._id);
-        const posts = await Post.find({ user_id: req.user._id });
 
         if (!user)
             return res.status(404).send();
 
+        const posts = await Post.find({ user_id: user._id });
+        
         return res.status(200).send({
             posts: posts.length,
             followers: user.followers.length,
@@ -232,7 +233,7 @@ exports.getFollowerList = async (req, res) => {
 
         if (!user)
             return res.status(404).send();
-        
+
         for (follower of user.followers) {
             followers.push(getFollowerInfo(follower));
         }
@@ -251,7 +252,7 @@ exports.getFollowingList = async (req, res) => {
 
         if (!user)
             return res.status(404).send();
-        
+
         for (followee of user.following) {
             following.push(getFollowerInfo(followee));
         }
@@ -267,7 +268,7 @@ const getFollowerInfo = async (id) => {
     try {
         const user = await User.findById(id);
 
-        return { _id : user._id, username : user.username, fullName: user.fullName, avatar : user.avatar };
+        return { _id: user._id, username: user.username, fullName: user.fullName, avatar: user.avatar };
     } catch (ex) {
         console.log(ex);
     }
