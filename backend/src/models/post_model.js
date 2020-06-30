@@ -3,11 +3,19 @@ const moment = require("moment");
 
 const { LikeSchema } = require("../models/like_model");
 const { CommentSchema } = require("../models/comment_model");
+const { string } = require("@hapi/joi");
 
 const schema = new mongoose.Schema({
     user_id: {
         type: String,
         required: true
+    },
+    username: {
+        type: String,
+        required: true
+    },
+    avatar: {
+        type: Buffer
     },
     timestamp: {
         type: String,

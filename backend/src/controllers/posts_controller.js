@@ -9,6 +9,11 @@ exports.create = async (req, res) => {
         let post = new Post(req.body);
 
         post.user_id = user._id;
+        post.username = user.username;
+
+        if (user.avatar)
+            post.avatar = user.avatar;
+            
         post.image = req.file.buffer;
 
         await post.save();
@@ -149,7 +154,8 @@ exports.getFeed = async (req, res) => {
 
         posts.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0));
 
-        const feed = posts.slice(range, range + itemsPerPage);
+        let feed = posts.slice(range, range + itemsPerPage);
+        feed = JSON.stringify(feed);
 
         res.status(200).send(feed);
     } catch (ex) {
@@ -170,7 +176,8 @@ exports.getExplore = async (req, res) => {
 
         posts.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0));
 
-        const feed = posts.slice(range, range + itemsPerPage);
+        let feed = posts.slice(range, range + itemsPerPage);
+        feed = JSON.stringify(feed);
 
         res.status(200).send(feed);
     } catch (ex) {
