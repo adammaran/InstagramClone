@@ -1,5 +1,3 @@
-const moment = require('moment');
-const _ = require("lodash");
 const bcrypt = require("bcryptjs");
 const { User, validateUser } = require("../models/user_model");
 const { Post } = require("../models/post_model");

@@ -1,7 +1,7 @@
-const moment = require('moment');
-const _ = require("lodash");
-const { Post, Like, Comment } = require("../models/post_model");
 const { User } = require("../models/user_model");
+const { Post } = require("../models/post_model");
+const { Like } = require("../models/like_model");
+const { Comment } = require("../models/comment_model");
 
 exports.create = async (req, res) => {
     try {
@@ -22,7 +22,7 @@ exports.create = async (req, res) => {
 
 exports.edit = async (req, res) => {
     try {
-        const post = Post.findById(req.params.post_id);
+        const post = await Post.findById(req.params.post_id);
 
         if (req.body.location) 
             post.location = req.body.location;
@@ -33,6 +33,17 @@ exports.edit = async (req, res) => {
         await post.save();
 
         return res.status(200).send(post);
+    } catch (ex) {
+        console.log(ex);
+        return res.status(500).send(ex.message);
+    }
+};
+
+exports.deletePost = async (req, res) => {
+    try {
+        await Post.findByIdAndDelete(req.params.post_id);
+
+        return res.status(200).send();
     } catch (ex) {
         console.log(ex);
         return res.status(500).send(ex.message);
