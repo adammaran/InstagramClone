@@ -36,15 +36,15 @@ public class UserProfileFragment extends Fragment {
     private TextView postCount, followerCount, followingCount, profileName, profileDesc;
     private UserModel user;
     private UserStatsModel userStats;
-    private boolean isCurrentUser;
+    private String token;
 
     private UserApi userApi;
 
     public UserProfileFragment() {
     }
 
-    public UserProfileFragment(boolean isCurrentUser) {
-        this.isCurrentUser = isCurrentUser;
+    public UserProfileFragment(String token) {
+        this.token = token;
     }
 
     @Override
@@ -74,29 +74,47 @@ public class UserProfileFragment extends Fragment {
         GridLayoutManager grid = new GridLayoutManager(view.getContext(), 3);
         postRecycler.setLayoutManager(grid);
         postRecycler.setAdapter(new PostsAdapter(Data.getFeedList()));
-        getUserStats();
         initData();
     }
 
     private void initData() {
-        if (isCurrentUser) {
-            user = CurrentUserModel.getInstance();
-        } else {
-            user = Data.getUserList().get(0);
-        }
+        getCurrentUserObject();
+        getUserStats();
+    }
+
+    private void getCurrentUserObject() {
+        Call<UserModel> call = userApi.getCurrentUser(this.token);
+        call.enqueue(new Callback<UserModel>() {
+            @Override
+            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                if (response.isSuccessful()) {
+                    user = response.body();
+                    setUserObject();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserModel> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void setUserObject() {
         Picasso.get().load(user.getAvatarURL()).placeholder(R.drawable.default_avatar).into(avatar);
         profileName.setText(user.getFullName());
         profileDesc.setText(user.getBio());
-
     }
 
     private void getUserStats() {
-        Call<UserStatsModel> call = userApi.getUserStats(getToken());
+        Call<UserStatsModel> call = userApi.getUserStats(this.token);
         call.enqueue(new Callback<UserStatsModel>() {
             @Override
             public void onResponse(Call<UserStatsModel> call, Response<UserStatsModel> response) {
-                userStats = response.body();
-                setUserStats();
+                if (response.isSuccessful()) {
+                    userStats = response.body();
+                    setUserStats();
+                }
             }
 
             @Override
@@ -104,10 +122,6 @@ public class UserProfileFragment extends Fragment {
                 Log.d(TAG, "Failed to get stats from database");
             }
         });
-    }
-
-    private String getToken() {
-        return PreferenceManager.getDefaultSharedPreferences(getContext()).getString("JWTtoken", null);
     }
 
     private void setUserStats() {

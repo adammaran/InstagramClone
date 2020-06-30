@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.instagramclone.Common.Data;
 import com.example.instagramclone.Models.FeedItemModel;
 import com.example.instagramclone.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -21,7 +19,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedPlaceHolder> {
     private Context context;
 
     public FeedAdapter(ArrayList<FeedItemModel> feedList, Context context) {
-        this.feedList = Data.getFeedList();
+        this.feedList = feedList;
         this.context = context;
     }
 

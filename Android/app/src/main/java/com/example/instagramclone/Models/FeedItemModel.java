@@ -2,34 +2,67 @@ package com.example.instagramclone.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.File;
+import java.util.List;
 
 public class FeedItemModel {
 
-    private String feedUUID;
-    private UserModel user;
-    private int likeCount;
-    private String imageURL;
-    private int commentCount;
+    private transient String feedUUID;
+    private transient UserModel user;
+    private transient int likeCount;
 
     @SerializedName("image")
-    private File imageFile;
+    private ImageBufferModel imageBuffer;
+
+    public ImageBufferModel getImageBuffer() {
+        return imageBuffer;
+    }
+
+    public void setImageBuffer(ImageBufferModel imageBuffer) {
+        this.imageBuffer = imageBuffer;
+    }
+
+    private String imageURL;
+
+    private transient int commentCount;
+
+    @SerializedName("likes")
+    private List<LikeModel> likeList;
+
+    @SerializedName("comments")
+    private List<CommentModel> commentList;
+
+    @SerializedName("user_id")
+    private String userUid;
 
     @SerializedName("description")
     private String description;
+
+    @SerializedName("timestamp")
     private String timestamp;
 
+    @SerializedName("location")
     private String locationString;
 
-//    @SerializedName("location")
-    private LocationModel location;
+    @SerializedName("username")
+    private String fullname;
+
+    private transient  LocationModel location;
 
     public FeedItemModel() {
 
     }
 
-    public FeedItemModel(File imageFile, String description, String location) {
-        this.imageFile = imageFile;
+    public FeedItemModel(String imageURL, List<LikeModel> likeList, List<CommentModel> commentList, String userUid, String description, String timestamp, String locationString) {
+        this.imageURL = imageURL;
+        this.likeList = likeList;
+        this.commentList = commentList;
+        this.userUid = userUid;
+        this.description = description;
+        this.timestamp = timestamp;
+        this.locationString = locationString;
+    }
+
+    public FeedItemModel(String description, String location) {
         this.description = description;
         this.locationString = location;
     }
@@ -51,20 +84,20 @@ public class FeedItemModel {
         this.location = location;
     }
 
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
     public String getLocationString() {
         return locationString;
     }
 
     public void setLocationString(String locationString) {
         this.locationString = locationString;
-    }
-
-    public File getImageFile() {
-        return imageFile;
-    }
-
-    public void setImageFile(File imageFile) {
-        this.imageFile = imageFile;
     }
 
     public String getFeedUUID() {

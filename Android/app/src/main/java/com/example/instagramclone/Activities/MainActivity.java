@@ -3,7 +3,9 @@ package com.example.instagramclone.Activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.ui.AppBarConfiguration;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,11 +13,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.instagramclone.Fragments.FeedFragment;
@@ -23,9 +27,6 @@ import com.example.instagramclone.Fragments.UserProfileFragment;
 import com.example.instagramclone.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-
-import java.io.File;
-import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout bottomSheet;
     private LinearLayout addFromCamera;
     private LinearLayout addFromGallery;
+
+    private ImageView menuButton;
 
     private BottomNavigationView bottomNavigationView;
     private Menu bottomMenu;
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         bottomSheet = findViewById(R.id.main_add_sheet);
         addFromCamera = findViewById(R.id.add_from_camera_button);
         addFromGallery = findViewById(R.id.add_from_gallery_button);
+        menuButton = findViewById(R.id.feed_toolbar_menu);
         loadFragment(new FeedFragment());
         initData();
     }
@@ -79,18 +83,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        addFromCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Todo add camera here
-            }
+        addFromCamera.setOnClickListener(view -> {
+            //Todo add camera here
         });
 
-        addFromGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openGallery();
-            }
+        addFromGallery.setOnClickListener(view -> openGallery());
+
+        menuButton.setOnClickListener(view -> {
+
         });
 
     }
@@ -107,42 +107,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initBottomNavListener() {
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                setUnselectedNav();
-                switch (item.getItemId()) {
-                    case R.id.action_feed:
-                        if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_home_gray_selected).getConstantState()))
-                            bottomMenu.findItem(R.id.action_feed).setIcon(R.drawable.ic_home_gray_unselected);
-                        else
-                            bottomMenu.findItem(R.id.action_feed).setIcon(R.drawable.ic_home_gray_selected);
-                        return loadFragment(new FeedFragment());
-                    case R.id.action_search:
-                        bottomMenu.findItem(R.id.action_search).setIcon(R.drawable.ic_search_gray_unseleted);
-                        //todo add search fragment and icon
-                        break;
-                    case R.id.action_add:
-                        setSheetState();
-                        break;
-                    case R.id.action_notifications:
-                        if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_notifications_gary_unselected).getConstantState()))
-                            bottomMenu.findItem(R.id.action_notifications).setIcon(R.drawable.ic_notifications_gray_selected);
-                        else
-                            bottomMenu.findItem(R.id.action_notifications).setIcon(R.drawable.ic_notifications_gary_unselected);
-                        //todo add notification fragment and icon
-                        break;
-                    case R.id.action_userProfile:
-                        if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_person_gray_unselected).getConstantState()))
-                            bottomMenu.findItem(R.id.action_userProfile).setIcon(R.drawable.ic_person_gray_selected);
-                        else
-                            bottomMenu.findItem(R.id.action_userProfile).setIcon(R.drawable.ic_person_gray_unselected);
-                        //todo add user fragment and icon
-                        loadFragment(new UserProfileFragment(true));
-                        break;
-                }
-                return false;
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            setUnselectedNav();
+            switch (item.getItemId()) {
+                case R.id.action_feed:
+                    if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_home_gray_selected).getConstantState())) {
+                        bottomMenu.findItem(R.id.action_feed).setIcon(R.drawable.ic_home_gray_unselected);
+                        findViewById(R.id.feed_toolbar_messages).setVisibility(View.VISIBLE);
+                        findViewById(R.id.feed_toolbar_menu).setVisibility(View.GONE);
+                    } else {
+                        bottomMenu.findItem(R.id.action_feed).setIcon(R.drawable.ic_home_gray_selected);
+                        findViewById(R.id.feed_toolbar_messages).setVisibility(View.VISIBLE);
+                        findViewById(R.id.feed_toolbar_menu).setVisibility(View.GONE);
+                    }
+                    return loadFragment(new FeedFragment());
+                case R.id.action_search:
+                    bottomMenu.findItem(R.id.action_search).setIcon(R.drawable.ic_search_gray_unseleted);
+                    //todo add search fragment and icon
+                    break;
+                case R.id.action_add:
+                    setSheetState();
+                    break;
+                case R.id.action_notifications:
+                    if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_notifications_gary_unselected).getConstantState()))
+                        bottomMenu.findItem(R.id.action_notifications).setIcon(R.drawable.ic_notifications_gray_selected);
+                    else
+                        bottomMenu.findItem(R.id.action_notifications).setIcon(R.drawable.ic_notifications_gary_unselected);
+                    //todo add notification fragment and icon
+                    break;
+                case R.id.action_userProfile:
+                    if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_person_gray_unselected).getConstantState())) {
+                        bottomMenu.findItem(R.id.action_userProfile).setIcon(R.drawable.ic_person_gray_selected);
+                        findViewById(R.id.feed_toolbar_menu).setVisibility(View.VISIBLE);
+                        findViewById(R.id.feed_toolbar_messages).setVisibility(View.GONE);
+                    } else {
+                        bottomMenu.findItem(R.id.action_userProfile).setIcon(R.drawable.ic_person_gray_unselected);
+                        findViewById(R.id.feed_toolbar_menu).setVisibility(View.VISIBLE);
+                        findViewById(R.id.feed_toolbar_messages).setVisibility(View.GONE);
+                    }
+                    //todo add user fragment and icon
+                    loadFragment(new UserProfileFragment(PreferenceManager.getDefaultSharedPreferences(this).getString("JWTtoken", null)));
+                    break;
             }
+            return false;
         });
     }
 

@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.instagramclone.Api.FeedApi;
 import com.example.instagramclone.Common.APIClient;
+import com.example.instagramclone.Common.FileUtil;
 import com.example.instagramclone.Models.FeedItemModel;
 import com.example.instagramclone.Models.LocationModel;
 import com.example.instagramclone.R;
@@ -28,6 +29,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -97,7 +101,7 @@ public class AddPostActivity extends AppCompatActivity {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE && resultCode == RESULT_OK) {
             Place place = Autocomplete.getPlaceFromIntent(data);
             LocationModel location = new LocationModel(place.getName(), place.getAddress(), place.getLatLng().latitude, place.getLatLng().longitude);
-            postItem.setLocation(location);
+            postItem.setLocationString(location.getName() + ", " + location.getAddess());
             locationText.setText(location.getName() + ", " + location.getAddess());
         }
 
@@ -105,21 +109,38 @@ public class AddPostActivity extends AppCompatActivity {
     }
 
     private void uploadPost() {
-        ;
-        postItem.setImageFile(new File(imageUri.getPath()));
-        System.out.println(new File(imageUri.getPath()) + " ja sam mali fajl");
+        File file = null;
+        try {
+            file = FileUtil.from(AddPostActivity.this, imageUri);
+            System.out.println(file + " ja sam mali fajl cao");
+            Log.d(TAG, "File added");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(imageUri)), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        RequestBody description = RequestBody.create(MultipartBody.FORM, captionText.getText().toString());
+
         postItem.setDescription(captionText.getText().toString());
-        Call<FeedItemModel> call = feedApi.postFeedItem(PreferenceManager.getDefaultSharedPreferences(this).getString("JWTtoken", null), postItem);
+        Log.d(TAG, postItem.getLocationString());
+        Call<FeedItemModel> call = feedApi.postFeedItem(getToken(), body, description);
         call.enqueue(new Callback<FeedItemModel>() {
             @Override
             public void onResponse(Call<FeedItemModel> call, Response<FeedItemModel> response) {
                 Log.d(TAG, "image uploaded");
+                onBackPressed();
             }
 
             @Override
             public void onFailure(Call<FeedItemModel> call, Throwable t) {
-                Log.d(TAG, "Error while uploding image");
+                Log.d(TAG, "Error while uploading image");
+                onBackPressed();
+                t.printStackTrace();
             }
         });
+    }
+
+    private String getToken() {
+        return PreferenceManager.getDefaultSharedPreferences(this).getString("JWTtoken", null);
     }
 }

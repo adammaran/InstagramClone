@@ -2,9 +2,7 @@ package com.example.instagramclone.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -58,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                 checkUserInfo();
             }
         });
-        signUpText.setOnClickListener(view -> startRegistraionActivity());
+        signUpText.setOnClickListener(view -> startRegistrationActivity());
     }
 
     private void checkUserInfo() {
@@ -90,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         PreferenceManager.getDefaultSharedPreferences(this).edit().putString("JWTtoken", token).apply();
     }
 
-    private void startRegistraionActivity() {
+    private void startRegistrationActivity() {
         startActivity(new Intent(this, RegistrationActivity.class));
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.instagramclone.Common.Data;
 import com.example.instagramclone.Models.FeedItemModel;
 import com.example.instagramclone.R;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 public class FeedPlaceHolder extends RecyclerView.ViewHolder {
@@ -43,15 +45,14 @@ public class FeedPlaceHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindItem(FeedItemModel feedItem, Context context) {
-        Picasso.get().load(feedItem.getUser().getAvatarURL()).into(avatar);
-        username.setText(feedItem.getUser().getUserName());
-        location.setText("Unknown for now");
+        Log.d("TEMP", "added post in feed");
+//        Picasso.get().load(feedItem.getUser().getAvatarURL()).placeholder(R.drawable.default_avatar).into(avatar);
+        username.setText(feedItem.getFullname());
+        location.setText(feedItem.getLocationString());
 
-        byte[] decodedString = Base64.decode(Data.getTestImage(), Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(feedItem.getImageBuffer().getData(), 0, feedItem.getImageBuffer().getData().length);
         image.setImageBitmap(bitmap);
 
-//        Picasso.get().load(feedItem.getImageURL()).into(image);
         likeCount.setText(Integer.toString(feedItem.getLikeCount()));
         description.setText(feedItem.getDescription());
         time.setText("Placeholder");
