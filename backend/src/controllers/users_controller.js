@@ -271,3 +271,20 @@ const getFollowerInfo = async (id) => {
         console.log(ex);
     }
 }
+
+exports.getPosts = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        let posts = await Post.find();
+
+        posts = posts.filter(post => user._id.equals(post.user_id));
+
+        posts.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0));
+
+        posts = JSON.stringify(posts);
+
+        res.status(200).send(posts);
+    } catch (ex) {
+        console.log(ex);
+    }
+}
