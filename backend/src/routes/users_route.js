@@ -16,5 +16,6 @@ router.patch('/unfollow/:id', auth, users.unfollow);
 router.get('/stats/:id?', auth, users.getUserStats);
 router.get('/followers/:id?', auth, users.getFollowerList);
 router.get('/following/:id?', auth, users.getFollowingList);
+router.get('/posts', auth, users.getPosts);
 
 module.exports = router;

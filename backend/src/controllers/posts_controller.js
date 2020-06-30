@@ -150,7 +150,7 @@ exports.getFeed = async (req, res) => {
         const user = await User.findById(req.user._id);
         let posts = await Post.find();
 
-        posts = posts.filter(post => user.following.includes(post.user_id) || post.user_id === user._id);
+        posts = posts.filter(post => user.following.includes(post.user_id) || user._id.equals(post.user_id));
 
         posts.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0));
 
