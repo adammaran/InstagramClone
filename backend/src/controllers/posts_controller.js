@@ -148,9 +148,9 @@ exports.getFeed = async (req, res) => {
         const page = req.params.page;
         const range = itemsPerPage * page - itemsPerPage;
         const user = await User.findById(req.user._id);
-        const posts = await Post.find();
+        let posts = await Post.find();
 
-        posts.filter(post => user.following.includes(post.user_id) || post.user_id === user._id);
+        posts = posts.filter(post => user.following.includes(post.user_id) || post.user_id === user._id);
 
         posts.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0));
 
@@ -170,9 +170,9 @@ exports.getExplore = async (req, res) => {
         const page = req.params.page;
         const range = itemsPerPage * page - itemsPerPage;
         const user = await User.findById(req.user._id);
-        const posts = await Post.find();
+        let posts = await Post.find();
 
-        posts.filter(post => !user.following.includes(post.user_id));
+        posts = posts.filter(post => !user.following.includes(post.user_id));
 
         posts.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0));
 
