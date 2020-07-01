@@ -197,10 +197,26 @@ exports.getCurrentUser = async (req, res) => {
         if (!user)
             return res.status(404).send();
 
-        return res.status(200).send(user);
+        const stats = await userStats(user._id);
+
+        return res.status(200).send({ user, ...stats });
     } catch (ex) {
         console.log(ex);
         return res.status(500).send();
+    }
+};
+
+const userStats = async (id) => {
+    try {
+        const user = await User.findById(id);
+        const posts = await Post.find({ user_id: user._id });
+        return {
+            posts: posts.length,
+            followers: user.followers.length,
+            following: user.following.length
+        };
+    } catch (ex) {
+        console.log(ex);
     }
 };
 
@@ -270,7 +286,7 @@ const getFollowerInfo = async (id) => {
     } catch (ex) {
         console.log(ex);
     }
-}
+};
 
 exports.getPosts = async (req, res) => {
     try {
