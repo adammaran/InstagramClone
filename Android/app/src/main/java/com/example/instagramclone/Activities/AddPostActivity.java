@@ -7,8 +7,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -43,6 +45,7 @@ public class AddPostActivity extends AppCompatActivity {
     private ImageView image;
     private EditText locationText, captionText;
     private TextView share;
+    private ProgressBar progressBar;
 
     private Uri imageUri;
     private FeedApi feedApi;
@@ -62,7 +65,9 @@ public class AddPostActivity extends AppCompatActivity {
         locationText = findViewById(R.id.addPost_place);
         captionText = findViewById(R.id.addPost_caption);
         share = findViewById(R.id.addPost_done);
+        progressBar = findViewById(R.id.addPost_progressBar);
         share.setOnClickListener(view -> {
+            progressBar.setVisibility(View.VISIBLE);
             uploadPost();
         });
         postItem = new FeedItemModel();
@@ -128,13 +133,13 @@ public class AddPostActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<FeedItemModel> call, Response<FeedItemModel> response) {
                 Log.d(TAG, "image uploaded");
-                onBackPressed();
+                new MainActivity().startActivity(new Intent(getBaseContext(), MainActivity.class));
             }
 
             @Override
             public void onFailure(Call<FeedItemModel> call, Throwable t) {
                 Log.d(TAG, "Error while uploading image");
-                onBackPressed();
+                new MainActivity().startActivity(new Intent(getBaseContext(), MainActivity.class));
                 t.printStackTrace();
             }
         });

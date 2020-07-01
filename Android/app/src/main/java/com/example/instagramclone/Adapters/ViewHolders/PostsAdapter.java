@@ -1,5 +1,10 @@
 package com.example.instagramclone.Adapters.ViewHolders;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +13,9 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.instagramclone.Activities.MainActivity;
 import com.example.instagramclone.Common.Data;
+import com.example.instagramclone.Fragments.OnePostFragment;
 import com.example.instagramclone.Models.FeedItemModel;
 import com.example.instagramclone.Models.UserModel;
 import com.example.instagramclone.R;
@@ -16,14 +23,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-//todo fix so that it fulls only posts from user which profile is showing
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHolder> {
 
     private ArrayList<FeedItemModel> postList;
+    private Context context;
 
-    //Make api for only pulling post for specific user!!!
     public PostsAdapter(ArrayList<FeedItemModel> postList) {
         this.postList = postList;
+        this.context = context;
     }
 
     @NonNull
@@ -36,7 +43,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
 
     @Override
     public void onBindViewHolder(@NonNull PostsViewHolder holder, int position) {
-        Picasso.get().load(postList.get(position).getImageURL()).into(holder.image);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(postList.get(position).getImageBuffer().getData(), 0, postList.get(position).getImageBuffer().getData().length);
+        holder.image.setImageBitmap(bitmap);
+        holder.image.setOnClickListener(view -> {
+            MainActivity activity = (MainActivity) view.getContext();
+            activity.loadFragment(new OnePostFragment(postList.get(position)));
+        });
     }
 
     @Override
@@ -46,11 +58,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
 
     public class PostsViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView image;
+        private ImageView image;
 
         public PostsViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.user_profile_post_image);
+
         }
     }
 }

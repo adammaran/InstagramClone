@@ -24,7 +24,7 @@ public class PorfilePostAdapter extends RecyclerView.Adapter {
         return 0;
     }
 
-    public class ProfilePostViewHolder extends RecyclerView.ViewHolder{
+    public class ProfilePostViewHolder extends RecyclerView.ViewHolder {
 
         public ProfilePostViewHolder(@NonNull View itemView) {
             super(itemView);

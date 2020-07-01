@@ -51,13 +51,22 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <ProgressBar
+        android:id="@+id/addPost_progressBar"
+        style="@android:style/Widget.ProgressBar.Inverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/addPost_image"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/addPost_toolbar.wrap"
         android:adjustViewBounds="true"
         android:maxHeight="400dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/placeholder" />
 
     <EditText

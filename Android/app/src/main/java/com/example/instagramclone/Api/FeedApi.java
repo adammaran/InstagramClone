@@ -6,7 +6,9 @@ import java.util.ArrayList;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
@@ -19,7 +21,14 @@ public interface FeedApi {
     @GET
     Call<ArrayList<FeedItemModel>> getFeed(@Url String url, @Header("Authorization") String header);
 
+    @GET
+    Call<ArrayList<FeedItemModel>> getExploreFeed(@Url String url, @Header("Authorization") String header);
+
     @Multipart
     @POST("posts/create/")
     Call<FeedItemModel> postFeedItem(@Header("Authorization") String header, @Part MultipartBody.Part file, @Part("description") RequestBody feedItem);
+
+    @DELETE
+    Call<ResponseBody> deletePost(@Url String url, @Header("Authorization") String header);
+
 }

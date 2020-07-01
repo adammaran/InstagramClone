@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +16,13 @@ import android.widget.TextView;
 import com.example.instagramclone.Adapters.ViewHolders.PostsAdapter;
 import com.example.instagramclone.Api.UserApi;
 import com.example.instagramclone.Common.APIClient;
-import com.example.instagramclone.Common.Data;
-import com.example.instagramclone.Models.CurrentUserModel;
+import com.example.instagramclone.Models.FeedItemModel;
 import com.example.instagramclone.Models.UserModel;
 import com.example.instagramclone.Models.UserStatsModel;
 import com.example.instagramclone.R;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +37,8 @@ public class UserProfileFragment extends Fragment {
     private UserModel user;
     private UserStatsModel userStats;
     private String token;
+
+    private ArrayList<FeedItemModel> currentUserPostList;
 
     private UserApi userApi;
 
@@ -67,19 +69,23 @@ public class UserProfileFragment extends Fragment {
         followingCount = view.findViewById(R.id.user_profile_followingCount);
         profileName = view.findViewById(R.id.user_profile_name);
         profileDesc = view.findViewById(R.id.user_profile_description);
+        postRecycler = view.findViewById(R.id.user_profile_post_recycler);
 
         userApi = APIClient.getClient().create(UserApi.class);
-
-        postRecycler = view.findViewById(R.id.user_profile_post_recycler);
-        GridLayoutManager grid = new GridLayoutManager(view.getContext(), 3);
-        postRecycler.setLayoutManager(grid);
-        postRecycler.setAdapter(new PostsAdapter(Data.getFeedList()));
-        initData();
+        initData(view);
     }
 
-    private void initData() {
+    private void getPostList() {
+
+    }
+
+    private void initData(View view) {
+        GridLayoutManager grid = new GridLayoutManager(view.getContext(), 3);
+        postRecycler.setLayoutManager(grid);
+        postRecycler.setAdapter(new PostsAdapter(currentUserPostList));
         getCurrentUserObject();
         getUserStats();
+
     }
 
     private void getCurrentUserObject() {

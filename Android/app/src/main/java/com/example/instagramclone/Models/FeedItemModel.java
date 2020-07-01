@@ -6,7 +6,9 @@ import java.util.List;
 
 public class FeedItemModel {
 
-    private transient String feedUUID;
+    @SerializedName("_id")
+    private String feedUUID;
+
     private transient UserModel user;
     private transient int likeCount;
 
@@ -46,7 +48,7 @@ public class FeedItemModel {
     @SerializedName("username")
     private String fullname;
 
-    private transient  LocationModel location;
+    private transient LocationModel location;
 
     public FeedItemModel() {
 

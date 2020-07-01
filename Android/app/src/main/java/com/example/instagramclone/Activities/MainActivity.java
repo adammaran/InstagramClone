@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.instagramclone.Fragments.ExploreFragment;
 import com.example.instagramclone.Fragments.FeedFragment;
 import com.example.instagramclone.Fragments.UserProfileFragment;
 import com.example.instagramclone.R;
@@ -122,9 +123,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return loadFragment(new FeedFragment());
                 case R.id.action_search:
-                    bottomMenu.findItem(R.id.action_search).setIcon(R.drawable.ic_search_gray_unseleted);
-                    //todo add search fragment and icon
-                    break;
+                    if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_search_white_selected_24dp).getConstantState())) {
+                        bottomMenu.findItem(R.id.action_search).setIcon(R.drawable.ic_search_gray_unseleted);
+                        //todo add search bar in toolbar
+                    } else {
+                        bottomMenu.findItem(R.id.action_search).setIcon(R.drawable.ic_search_gray_unseleted);
+                    }
+                    return loadFragment(new ExploreFragment());
                 case R.id.action_add:
                     setSheetState();
                     break;
@@ -161,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean loadFragment(Fragment fragment) {
+    public boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()

@@ -62,7 +62,8 @@
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/feed_toolbar.wrap" />
+        android:layout_below="@+id/feed_toolbar.wrap"
+        android:layout_marginBottom="?android:attr/actionBarSize" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
