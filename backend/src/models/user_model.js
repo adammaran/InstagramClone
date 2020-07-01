@@ -7,21 +7,21 @@ const schema = new mongoose.Schema({
     fullName: {
         type: String,
         minlength: 2,
-        maxlength: 225
+        maxlength: 100
     },
     username: {
         type: String,
         unique: true,
         required: true,
         minlength: 3,
-        maxlength: 50
+        maxlength: 30
     },
     email: {
         type: String,
         unique: true,
         required: true,
         minlength: 4,
-        maxlength: 225
+        maxlength: 100
     },
     password: {
         type: String,

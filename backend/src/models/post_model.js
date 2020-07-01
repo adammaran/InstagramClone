@@ -3,7 +3,6 @@ const moment = require("moment");
 
 const { LikeSchema } = require("../models/like_model");
 const { CommentSchema } = require("../models/comment_model");
-const { string } = require("@hapi/joi");
 
 const schema = new mongoose.Schema({
     user_id: {
@@ -19,7 +18,7 @@ const schema = new mongoose.Schema({
     },
     timestamp: {
         type: String,
-        default: () => moment().format()
+        default: () => moment().format("HH:MM, D.M.YYYY.")
     },
     location: {
         type: String
