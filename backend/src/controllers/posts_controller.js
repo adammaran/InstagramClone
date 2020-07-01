@@ -154,7 +154,7 @@ exports.getFeed = async (req, res) => {
 
         posts = posts.filter(post => user.following.includes(post.user_id) || user._id.equals(post.user_id));
 
-        posts.sort((a, b) => (moment(a.timestamp).isBefore(b.timestamp)) ? 1 : ((moment(b.timestamp).isBefore(a.timestamp)) ? -1 : 0));
+        posts.sort((a, b) => (moment(a.timestamp).isBefore(moment(b.timestamp)) ? 1 : ((moment(b.timestamp).isBefore(moment(a.timestamp))) ? -1 : 0)));
 
         let feed = posts.slice(range, range + itemsPerPage);
         feed = JSON.stringify(feed);
@@ -173,11 +173,12 @@ exports.getExplore = async (req, res) => {
         const range = itemsPerPage * page - itemsPerPage;
         const user = await User.findById(req.user._id);
         let posts = await Post.find();
+        console.log("ass");
 
         posts = posts.filter(post => !user.following.includes(post.user_id) && !user._id.equals(post.user_id));
 
-        posts.sort((a, b) => (moment(a.timestamp).isBefore(b.timestamp)) ? 1 : ((moment(b.timestamp).isBefore(a.timestamp)) ? -1 : 0));
-
+        posts.sort((a, b) => (moment(a.timestamp).isBefore(moment(b.timestamp)) ? 1 : ((moment(b.timestamp).isBefore(moment(a.timestamp))) ? -1 : 0)));
+        
         let feed = posts.slice(range, range + itemsPerPage);
         feed = JSON.stringify(feed);
 
