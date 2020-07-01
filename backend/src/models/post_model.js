@@ -18,7 +18,7 @@ const schema = new mongoose.Schema({
     },
     timestamp: {
         type: String,
-        default: () => moment().format("HH:MM, D.M.YYYY.")
+        default: () => moment.tz(moment(), "Europe/Belgrade").format()
     },
     location: {
         type: String

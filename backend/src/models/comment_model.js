@@ -9,7 +9,7 @@ const schema = new mongoose.Schema({
     timestamp: {
         type: String,
         required: true,
-        default: () => moment().format("hh:mm dd/MM/yyyy")
+        default: () => moment.tz(moment(), "Europe/Belgrade").format()
     },
     comment: {
         type: String,
