@@ -1,15 +1,19 @@
 package com.example.instagramclone.Api;
 
+import com.example.instagramclone.Models.FeedItemModel;
 import com.example.instagramclone.Models.TokenModel;
 import com.example.instagramclone.Models.UserModel;
-import com.example.instagramclone.Models.UserStatsModel;
+import com.example.instagramclone.Models.UserObjModel;
 
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Url;
 
 public interface UserApi {
 
@@ -19,9 +23,12 @@ public interface UserApi {
     @POST("auth/login/")
     Call<TokenModel> getUser(@Body UserModel user);
 
-    @GET("users/stats/")
-    Call<UserStatsModel> getUserStats(@Header("Authorization") String token);
+    @GET("users/profile")
+    Call<UserObjModel> getCurrentUser(@Header("Authorization") String header);
 
-    @GET("users/")
-    Call<UserModel> getCurrentUser(@Header("Authorization") String token);
+    @GET
+    Call<UserModel> getUserObject(@Url String url, @Header("Authorization") String header);
+
+    @GET
+    Call<ArrayList<FeedItemModel>> getCurrentUserPostList(@Url String url, @Header("Authorization") String header);
 }

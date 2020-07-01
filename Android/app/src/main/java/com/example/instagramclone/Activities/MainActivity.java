@@ -9,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 
 import com.example.instagramclone.Fragments.ExploreFragment;
 import com.example.instagramclone.Fragments.FeedFragment;
@@ -91,9 +93,26 @@ public class MainActivity extends AppCompatActivity {
         addFromGallery.setOnClickListener(view -> openGallery());
 
         menuButton.setOnClickListener(view -> {
-
+            showMenuDialog();
         });
 
+    }
+
+    private void showMenuDialog() {
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), menuButton);
+        popupMenu.getMenuInflater().inflate(R.menu.side_slide_settings_menu, popupMenu.getMenu());
+        popupMenu.getMenu().getItem(0).setOnMenuItemClickListener(item -> {
+            return false;
+        });
+        popupMenu.getMenu().getItem(1).setOnMenuItemClickListener(item -> {
+            return false;
+        });
+        popupMenu.getMenu().getItem(2).setOnMenuItemClickListener(item -> {
+            PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply();
+            startActivity(new Intent(this, LoginActivity.class));
+            return false;
+        });
+        popupMenu.show();
     }
 
     private void openGallery() {
@@ -114,12 +133,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.action_feed:
                     if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_home_gray_selected).getConstantState())) {
                         bottomMenu.findItem(R.id.action_feed).setIcon(R.drawable.ic_home_gray_unselected);
-                        findViewById(R.id.feed_toolbar_messages).setVisibility(View.VISIBLE);
-                        findViewById(R.id.feed_toolbar_menu).setVisibility(View.GONE);
                     } else {
                         bottomMenu.findItem(R.id.action_feed).setIcon(R.drawable.ic_home_gray_selected);
-                        findViewById(R.id.feed_toolbar_messages).setVisibility(View.VISIBLE);
-                        findViewById(R.id.feed_toolbar_menu).setVisibility(View.GONE);
                     }
                     return loadFragment(new FeedFragment());
                 case R.id.action_search:
@@ -143,12 +158,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.action_userProfile:
                     if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_person_gray_unselected).getConstantState())) {
                         bottomMenu.findItem(R.id.action_userProfile).setIcon(R.drawable.ic_person_gray_selected);
-                        findViewById(R.id.feed_toolbar_menu).setVisibility(View.VISIBLE);
-                        findViewById(R.id.feed_toolbar_messages).setVisibility(View.GONE);
                     } else {
                         bottomMenu.findItem(R.id.action_userProfile).setIcon(R.drawable.ic_person_gray_unselected);
-                        findViewById(R.id.feed_toolbar_menu).setVisibility(View.VISIBLE);
-                        findViewById(R.id.feed_toolbar_messages).setVisibility(View.GONE);
                     }
                     //todo add user fragment and icon
                     loadFragment(new UserProfileFragment(PreferenceManager.getDefaultSharedPreferences(this).getString("JWTtoken", null)));

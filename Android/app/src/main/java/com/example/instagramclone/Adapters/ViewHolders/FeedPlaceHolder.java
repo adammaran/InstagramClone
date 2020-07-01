@@ -80,7 +80,7 @@ public class FeedPlaceHolder extends RecyclerView.ViewHolder {
 
         likeCount.setText(feedItem.getLikeCount() + " likes");
         description.setText(feedItem.getDescription());
-        time.setText(formatTime(feedItem));
+        time.setText(feedItem.getTimestamp());
         options.setOnClickListener(view -> {
             showPopupMenu(this.context);
         });
@@ -121,21 +121,6 @@ public class FeedPlaceHolder extends RecyclerView.ViewHolder {
                 t.printStackTrace();
             }
         });
-    }
-
-    private String formatTime(FeedItemModel feedItem) {
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-ddThh:mm:ss+00:00");
-            Date parsedDate = dateFormat.parse(feedItem.getTimestamp());
-            Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
-
-            SimpleDateFormat stringFormat = new SimpleDateFormat("hh:mm dd:MM:yyyy");
-            return stringFormat.format(timestamp);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     private String getToken() {

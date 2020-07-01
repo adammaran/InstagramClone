@@ -12,12 +12,6 @@ public class UserStatsModel {
     @SerializedName("following")
     private int followingCount;
 
-    public UserStatsModel(int postCount, int followerCount, int followingCount) {
-        this.postCount = postCount;
-        this.followerCount = followerCount;
-        this.followingCount = followingCount;
-    }
-
     public int getPostCount() {
         return postCount;
     }

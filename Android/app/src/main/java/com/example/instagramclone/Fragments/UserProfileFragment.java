@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +18,7 @@ import com.example.instagramclone.Api.UserApi;
 import com.example.instagramclone.Common.APIClient;
 import com.example.instagramclone.Models.FeedItemModel;
 import com.example.instagramclone.Models.UserModel;
-import com.example.instagramclone.Models.UserStatsModel;
+import com.example.instagramclone.Models.UserObjModel;
 import com.example.instagramclone.R;
 import com.squareup.picasso.Picasso;
 
@@ -34,8 +34,7 @@ public class UserProfileFragment extends Fragment {
     private RecyclerView postRecycler;
     private ImageView avatar;
     private TextView postCount, followerCount, followingCount, profileName, profileDesc;
-    private UserModel user;
-    private UserStatsModel userStats;
+    private UserObjModel user;
     private String token;
 
     private ArrayList<FeedItemModel> currentUserPostList;
@@ -72,67 +71,62 @@ public class UserProfileFragment extends Fragment {
         postRecycler = view.findViewById(R.id.user_profile_post_recycler);
 
         userApi = APIClient.getClient().create(UserApi.class);
-        initData(view);
+        getCurrentUserObject(view);
     }
 
-    private void getPostList() {
+    private void getPostList(View v) {
+        Call<ArrayList<FeedItemModel>> call = userApi.getCurrentUserPostList("/api/users/posts/" + user.getUser().getUserID(), getToken());
+        call.enqueue(new Callback<ArrayList<FeedItemModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<FeedItemModel>> call, Response<ArrayList<FeedItemModel>> response) {
+                currentUserPostList = response.body();
+                initData(v);
+            }
 
+            @Override
+            public void onFailure(Call<ArrayList<FeedItemModel>> call, Throwable t) {
+
+            }
+        });
     }
 
     private void initData(View view) {
         GridLayoutManager grid = new GridLayoutManager(view.getContext(), 3);
         postRecycler.setLayoutManager(grid);
         postRecycler.setAdapter(new PostsAdapter(currentUserPostList));
-        getCurrentUserObject();
-        getUserStats();
 
     }
 
-    private void getCurrentUserObject() {
-        Call<UserModel> call = userApi.getCurrentUser(this.token);
-        call.enqueue(new Callback<UserModel>() {
+    private void getCurrentUserObject(View v) {
+        Call<UserObjModel> call = userApi.getCurrentUser(this.token);
+        call.enqueue(new Callback<UserObjModel>() {
             @Override
-            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+            public void onResponse(Call<UserObjModel> call, Response<UserObjModel> response) {
                 if (response.isSuccessful()) {
                     user = response.body();
                     setUserObject();
+                    getPostList(v);
                 }
             }
 
             @Override
-            public void onFailure(Call<UserModel> call, Throwable t) {
-
+            public void onFailure(Call<UserObjModel> call, Throwable t) {
+                t.printStackTrace();
             }
         });
     }
 
     private void setUserObject() {
-        Picasso.get().load(user.getAvatarURL()).placeholder(R.drawable.default_avatar).into(avatar);
-        profileName.setText(user.getFullName());
-        profileDesc.setText(user.getBio());
+        Picasso.get().load(user.getUser().getAvatarURL()).placeholder(R.drawable.default_avatar).into(avatar);
+        profileName.setText(user.getUser().getFullName());
+        profileDesc.setText(user.getUser().getBio());
+
+        postCount.setText(String.valueOf(user.getUserStats().getPostCount()));
+        followerCount.setText(String.valueOf(user.getUserStats().getFollowerCount()));
+        followingCount.setText(String.valueOf(user.getUserStats().getFollowingCount()));
     }
 
-    private void getUserStats() {
-        Call<UserStatsModel> call = userApi.getUserStats(this.token);
-        call.enqueue(new Callback<UserStatsModel>() {
-            @Override
-            public void onResponse(Call<UserStatsModel> call, Response<UserStatsModel> response) {
-                if (response.isSuccessful()) {
-                    userStats = response.body();
-                    setUserStats();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UserStatsModel> call, Throwable t) {
-                Log.d(TAG, "Failed to get stats from database");
-            }
-        });
-    }
-
-    private void setUserStats() {
-        postCount.setText(String.valueOf(userStats.getPostCount()));
-        followerCount.setText(String.valueOf(userStats.getFollowerCount()));
-        followingCount.setText(String.valueOf(userStats.getFollowingCount()));
+    private String getToken() {
+        return PreferenceManager.getDefaultSharedPreferences(getContext()).getString("JWTtoken", null);
     }
 }

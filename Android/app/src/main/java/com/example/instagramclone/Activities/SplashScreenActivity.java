@@ -12,6 +12,7 @@ import com.example.instagramclone.Api.UserApi;
 import com.example.instagramclone.Common.APIClient;
 import com.example.instagramclone.Models.CurrentUserModel;
 import com.example.instagramclone.Models.UserModel;
+import com.example.instagramclone.Models.UserObjModel;
 import com.example.instagramclone.R;
 
 import retrofit2.Call;
@@ -37,15 +38,15 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void getUserFromDb() {
-        Call<UserModel> call = userApi.getCurrentUser(getToken());
-        call.enqueue(new Callback<UserModel>() {
+        Call<UserObjModel> call = userApi.getCurrentUser(getToken());
+        call.enqueue(new Callback<UserObjModel>() {
             @Override
-            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                CurrentUserModel.setInstance(response.body());
+            public void onResponse(Call<UserObjModel> call, Response<UserObjModel> response) {
+                CurrentUserModel.setInstance(response.body().getUser());
             }
 
             @Override
-            public void onFailure(Call<UserModel> call, Throwable t) {
+            public void onFailure(Call<UserObjModel> call, Throwable t) {
 
             }
         });

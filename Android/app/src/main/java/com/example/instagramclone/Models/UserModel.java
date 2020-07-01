@@ -3,6 +3,10 @@ package com.example.instagramclone.Models;
 import com.google.gson.annotations.SerializedName;
 
 public class UserModel {
+
+    @SerializedName("_id")
+    private String userID;
+
     @SerializedName("username")
     private String userName;
 
@@ -20,7 +24,6 @@ public class UserModel {
 
     @SerializedName("bio")
     private String bio;
-
 
     private Integer postCount;
     private Integer followerCount;
@@ -51,6 +54,14 @@ public class UserModel {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getUserName() {
