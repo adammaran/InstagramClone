@@ -190,16 +190,18 @@ exports.findbyUsername = async (req, res) => {
     }
 };
 
-exports.getCurrentUser = async (req, res) => {
+exports.getUser = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id);
+        let user = req.params.id ? await User.findById(req.params.id) : await User.findById(req.user._id);
 
         if (!user)
             return res.status(404).send();
 
         const stats = await userStats(user._id);
 
-        return res.status(200).send({ user, ...stats });
+        user = { user, stats };
+        
+        return res.status(200).send(user);
     } catch (ex) {
         console.log(ex);
         return res.status(500).send();
@@ -217,26 +219,6 @@ const userStats = async (id) => {
         };
     } catch (ex) {
         console.log(ex);
-    }
-};
-
-exports.getUserStats = async (req, res) => {
-    try {
-        const user = req.params.id ? await User.findById(req.params.id) : await User.findById(req.user._id);
-
-        if (!user)
-            return res.status(404).send();
-
-        const posts = await Post.find({ user_id: user._id });
-        
-        return res.status(200).send({
-            posts: posts.length,
-            followers: user.followers.length,
-            following: user.following.length
-        });
-    } catch (ex) {
-        console.log(ex);
-        return res.status(500).send();
     }
 };
 
@@ -290,12 +272,12 @@ const getFollowerInfo = async (id) => {
 
 exports.getPosts = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id);
+        const user = req.params.id ? await User.findById(req.params.id) : await User.findById(req.user._id);
         let posts = await Post.find();
 
         posts = posts.filter(post => user._id.equals(post.user_id));
 
-        posts.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0));
+        posts.sort((a, b) => (moment(a.timestamp).isBefore(b.timestamp)) ? 1 : ((moment(b.timestamp).isBefore(a.timestamp)) ? -1 : 0));
 
         posts = JSON.stringify(posts);
 

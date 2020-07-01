@@ -1,3 +1,5 @@
+const moment = require("moment");
+
 const { User } = require("../models/user_model");
 const { Post } = require("../models/post_model");
 const { Like } = require("../models/like_model");
@@ -152,7 +154,7 @@ exports.getFeed = async (req, res) => {
 
         posts = posts.filter(post => user.following.includes(post.user_id) || user._id.equals(post.user_id));
 
-        posts.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0));
+        posts.sort((a, b) => (moment(a.timestamp).isBefore(b.timestamp)) ? 1 : ((moment(b.timestamp).isBefore(a.timestamp)) ? -1 : 0));
 
         let feed = posts.slice(range, range + itemsPerPage);
         feed = JSON.stringify(feed);
@@ -172,9 +174,9 @@ exports.getExplore = async (req, res) => {
         const user = await User.findById(req.user._id);
         let posts = await Post.find();
 
-        posts = posts.filter(post => !user.following.includes(post.user_id));
+        posts = posts.filter(post => !user.following.includes(post.user_id) && !user._id.equals(post.user_id));
 
-        posts.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0));
+        posts.sort((a, b) => (moment(a.timestamp).isBefore(b.timestamp)) ? 1 : ((moment(b.timestamp).isBefore(a.timestamp)) ? -1 : 0));
 
         let feed = posts.slice(range, range + itemsPerPage);
         feed = JSON.stringify(feed);
