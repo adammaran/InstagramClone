@@ -11,6 +11,7 @@ router.delete('/delete/:post_id', auth, posts.deletePost);
 router.patch('/edit/:post_id', auth, posts.edit);
 router.patch('/like/:post_id', auth, posts.like);
 router.patch('/unlike/:post_id', auth, posts.unlike);
+router.get('/likes/:post_id', auth, posts.getLikesCount);
 router.patch('/comment/:post_id', auth, posts.comment);
 router.patch('/delete-comment/:post_id', auth, posts.deleteComment);
 

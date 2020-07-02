@@ -40,7 +40,7 @@ exports.create = async (req, res) => {
 exports.edit = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
-
+        console.log(req.body);
         if (req.body.username) {
             if (await User.findOne({ username: req.body.username }))
                 return res.status(400).send('Uneto korisničko ime već postoji.');
@@ -121,6 +121,19 @@ exports.uploadAvatar = async (req, res) => {
         await user.save();
 
         return res.status(201).send(user);
+    } catch (ex) {
+        console.log(ex);
+        return res.status(500).send(ex.message);
+    }
+};
+
+exports.getAvatar = async (req, res) => {
+    try {
+        const user = req.params.id ? await User.findById(req.params.id) : await User.findById(req.user._id);
+
+        const avatar = user.avatar;
+
+        return res.status(200).send(avatar);
     } catch (ex) {
         console.log(ex);
         return res.status(500).send(ex.message);
@@ -233,7 +246,7 @@ exports.getFollowerList = async (req, res) => {
             return res.status(404).send();
 
         for (follower of user.followers) {
-            followers.push(getFollowerInfo(follower));
+            followers.push(await getFollowerInfo(follower));
         }
 
         return res.status(200).send(followers);
@@ -252,7 +265,7 @@ exports.getFollowingList = async (req, res) => {
             return res.status(404).send();
 
         for (followee of user.following) {
-            following.push(getFollowerInfo(followee));
+            following.push(await getFollowerInfo(followee));
         }
 
         return res.status(200).send(following);
