@@ -11,6 +11,7 @@ router.patch('/edit', auth, users.edit);
 router.patch('/toggle/private', auth, users.togglePrivate);
 router.patch('/toggle/active', auth, users.toggleActive);
 router.post('/avatar', auth, image.upload.single('avatar'), users.uploadAvatar);
+router.get('/avatar', auth, users.getAvatar);
 router.patch('/follow/:id', auth, users.follow);
 router.patch('/unfollow/:id', auth, users.unfollow);
 router.get('/followers/:id?', auth, users.getFollowerList);

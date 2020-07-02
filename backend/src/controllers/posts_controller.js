@@ -105,6 +105,18 @@ exports.unlike = async (req, res) => {
     }
 };
 
+exports.getLikesCount = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.post_id);
+        const likes = post.likes.length;
+
+        return res.send(likes);
+    } catch (ex) {
+        console.log(ex);
+        return res.status(500).send(ex.message);
+    }
+};
+
 exports.comment = async (req, res) => {
     try {
         const user = await User.findById(req.user._id).select('username');
