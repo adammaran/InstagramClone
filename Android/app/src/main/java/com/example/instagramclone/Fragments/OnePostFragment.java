@@ -12,15 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.instagramclone.Activities.MainActivity;
 import com.example.instagramclone.Models.FeedItemModel;
 import com.example.instagramclone.R;
 
 public class OnePostFragment extends Fragment {
 
-    private ImageView avatar, options, image, like, comment;
+    private ImageView avatar, image, like, comment;
     private TextView username, location, likeCount, description, time;
+    private LinearLayout gotoProfile;
 
     private FeedItemModel itemModel;
 
@@ -54,13 +57,18 @@ public class OnePostFragment extends Fragment {
         likeCount = v.findViewById(R.id.feed_item_like_count);
         description = v.findViewById(R.id.feed_item_description);
         time = v.findViewById(R.id.feed_item_timestamp);
+
+        gotoProfile = v.findViewById(R.id.feed_item_gotoProfile);
+        gotoProfile.setOnClickListener(view1 -> {
+            MainActivity main = (MainActivity) v.getContext();
+            main.loadFragment(new UserProfileFragment(itemModel.getUserID(), false));
+        });
         initData();
     }
 
     private void initData() {
         Bitmap bitmap = BitmapFactory.decodeByteArray(itemModel.getImageBuffer().getData(), 0, itemModel.getImageBuffer().getData().length);
         image.setImageBitmap(bitmap);
-
         likeCount.setText(itemModel.getLikeCount() + " likes");
         username.setText(itemModel.getFullname());
         location.setText(itemModel.getLocationString());

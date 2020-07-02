@@ -1,6 +1,10 @@
 package com.example.instagramclone.Models;
 
-public class CurrentUserModel{
+import com.google.gson.annotations.SerializedName;
+
+public class CurrentUserModel {
+
+    @SerializedName("user")
     private static UserModel instance = null;
 
     private CurrentUserModel() {

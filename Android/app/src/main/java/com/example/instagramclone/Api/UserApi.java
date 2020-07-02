@@ -27,7 +27,7 @@ public interface UserApi {
     Call<UserObjModel> getCurrentUser(@Header("Authorization") String header);
 
     @GET
-    Call<UserModel> getUserObject(@Url String url, @Header("Authorization") String header);
+    Call<UserObjModel> getUserObject(@Url String url, @Header("Authorization") String header);
 
     @GET
     Call<ArrayList<FeedItemModel>> getCurrentUserPostList(@Url String url, @Header("Authorization") String header);

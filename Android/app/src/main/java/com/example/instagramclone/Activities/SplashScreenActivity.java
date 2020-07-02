@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.example.instagramclone.Api.UserApi;
 import com.example.instagramclone.Common.APIClient;
@@ -33,7 +34,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         if (token == null) startLoginActivity();
         else {
             getUserFromDb();
-            startMainActivity();
         }
     }
 
@@ -43,6 +43,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<UserObjModel> call, Response<UserObjModel> response) {
                 CurrentUserModel.setInstance(response.body().getUser());
+                startMainActivity();
             }
 
             @Override

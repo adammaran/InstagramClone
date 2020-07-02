@@ -9,6 +9,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -16,9 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.instagramclone.Activities.MainActivity;
 import com.example.instagramclone.Api.FeedApi;
 import com.example.instagramclone.Common.APIClient;
 import com.example.instagramclone.Common.Data;
+import com.example.instagramclone.Fragments.UserProfileFragment;
+import com.example.instagramclone.Models.CurrentUserModel;
 import com.example.instagramclone.Models.FeedItemModel;
 import com.example.instagramclone.R;
 import com.google.android.material.snackbar.Snackbar;
@@ -44,6 +48,7 @@ public class FeedPlaceHolder extends RecyclerView.ViewHolder {
     private TextView description;
     private TextView time;
     private ImageView options;
+    private LinearLayout gotoProfile;
 
     private Context context;
     private FeedItemModel itemModel;
@@ -63,6 +68,8 @@ public class FeedPlaceHolder extends RecyclerView.ViewHolder {
         description = view.findViewById(R.id.feed_item_description);
         time = view.findViewById(R.id.feed_item_timestamp);
         options = view.findViewById(R.id.feed_item_more);
+        gotoProfile = view.findViewById(R.id.feed_item_gotoProfile);
+
         context = view.getContext();
 
         feedApi = APIClient.getClient().create(FeedApi.class);
@@ -81,8 +88,15 @@ public class FeedPlaceHolder extends RecyclerView.ViewHolder {
         likeCount.setText(feedItem.getLikeCount() + " likes");
         description.setText(feedItem.getDescription());
         time.setText(feedItem.getTimestamp());
+        if(CurrentUserModel.getInstance().getUserID().equals(feedItem.getUserID())){
+            options.setVisibility(View.VISIBLE);
+        }
         options.setOnClickListener(view -> {
             showPopupMenu(this.context);
+        });
+        gotoProfile.setOnClickListener(view -> {
+            MainActivity main = (MainActivity) view.getContext();
+            main.loadFragment(new UserProfileFragment(feedItem.getUserID(), false));
         });
     }
 

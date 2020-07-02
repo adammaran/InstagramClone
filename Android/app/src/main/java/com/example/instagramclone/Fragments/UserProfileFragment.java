@@ -7,12 +7,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.instagramclone.Activities.MainActivity;
 import com.example.instagramclone.Adapters.ViewHolders.PostsAdapter;
 import com.example.instagramclone.Api.UserApi;
 import com.example.instagramclone.Common.APIClient;
@@ -34,11 +37,15 @@ public class UserProfileFragment extends Fragment {
     private RecyclerView postRecycler;
     private ImageView avatar;
     private TextView postCount, followerCount, followingCount, profileName, profileDesc;
+    private LinearLayout gotoProfile;
+
     private UserObjModel user;
+
+    private boolean isCurrenUser = true;
+    private String userID;
     private String token;
 
     private ArrayList<FeedItemModel> currentUserPostList;
-
     private UserApi userApi;
 
     public UserProfileFragment() {
@@ -46,6 +53,11 @@ public class UserProfileFragment extends Fragment {
 
     public UserProfileFragment(String token) {
         this.token = token;
+    }
+
+    public UserProfileFragment(String userID, boolean isCurrenUser) {
+        this.isCurrenUser = isCurrenUser;
+        this.userID = userID;
     }
 
     @Override
@@ -56,8 +68,12 @@ public class UserProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-        initComponents(view);
-
+        userApi = APIClient.getClient().create(UserApi.class);
+        if (isCurrenUser) {
+            getCurrentUserObject(view);
+        } else {
+            getUserByID(view);
+        }
         return view;
     }
 
@@ -69,9 +85,25 @@ public class UserProfileFragment extends Fragment {
         profileName = view.findViewById(R.id.user_profile_name);
         profileDesc = view.findViewById(R.id.user_profile_description);
         postRecycler = view.findViewById(R.id.user_profile_post_recycler);
+    }
 
-        userApi = APIClient.getClient().create(UserApi.class);
-        getCurrentUserObject(view);
+    private void getUserByID(View v) {
+        Log.d(TAG, userID);
+        Call<UserObjModel> call = userApi.getUserObject("/api/users/profile/" + userID, getToken());
+        call.enqueue(new Callback<UserObjModel>() {
+            @Override
+            public void onResponse(Call<UserObjModel> call, Response<UserObjModel> response) {
+                user = response.body();
+                initComponents(v);
+                setUserObject();
+                getPostList(v);
+            }
+
+            @Override
+            public void onFailure(Call<UserObjModel> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     private void getPostList(View v) {
@@ -85,7 +117,7 @@ public class UserProfileFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ArrayList<FeedItemModel>> call, Throwable t) {
-
+                t.printStackTrace();
             }
         });
     }
@@ -104,6 +136,7 @@ public class UserProfileFragment extends Fragment {
             public void onResponse(Call<UserObjModel> call, Response<UserObjModel> response) {
                 if (response.isSuccessful()) {
                     user = response.body();
+                    initComponents(v);
                     setUserObject();
                     getPostList(v);
                 }

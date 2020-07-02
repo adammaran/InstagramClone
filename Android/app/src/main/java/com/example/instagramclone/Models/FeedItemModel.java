@@ -9,7 +9,9 @@ public class FeedItemModel {
     @SerializedName("_id")
     private String feedUUID;
 
-    private transient UserModel user;
+    @SerializedName("user_id")
+    private String userID;
+
     private transient int likeCount;
 
     @SerializedName("image")
@@ -33,9 +35,6 @@ public class FeedItemModel {
     @SerializedName("comments")
     private List<CommentModel> commentList;
 
-    @SerializedName("user_id")
-    private String userUid;
-
     @SerializedName("description")
     private String description;
 
@@ -58,7 +57,6 @@ public class FeedItemModel {
         this.imageURL = imageURL;
         this.likeList = likeList;
         this.commentList = commentList;
-        this.userUid = userUid;
         this.description = description;
         this.timestamp = timestamp;
         this.locationString = locationString;
@@ -75,15 +73,23 @@ public class FeedItemModel {
         this.location = location;
     }
 
-    public FeedItemModel(String feedUUID, UserModel user, int likeCount, String imageURL, int commentCount, String description, String timestamp, LocationModel location) {
+    public FeedItemModel(String feedUUID, String userID, int likeCount, String imageURL, int commentCount, String description, String timestamp, LocationModel location) {
         this.feedUUID = feedUUID;
-        this.user = user;
+        this.userID = userID;
         this.likeCount = likeCount;
         this.imageURL = imageURL;
         this.commentCount = commentCount;
         this.description = description;
         this.timestamp = timestamp;
         this.location = location;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getFullname() {
@@ -108,14 +114,6 @@ public class FeedItemModel {
 
     public void setFeedUUID(String feedUUID) {
         this.feedUUID = feedUUID;
-    }
-
-    public UserModel getUser() {
-        return user;
-    }
-
-    public void setUser(UserModel user) {
-        this.user = user;
     }
 
     public int getLikeCount() {
