@@ -22,6 +22,15 @@
             android:src="@drawable/ic_favorite_border_black_24dp" />
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/feed_item_liked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="6dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_favorite_black_24dp"
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/feed_item_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,23 +38,8 @@
             android:layout_weight="1"
             android:src="@drawable/ic_mode_comment_black_32dp" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/feed_item_send_asMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="6dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_send_gray_32dp" />
 
     </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/feed_item_favorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerInParent="true"
-        android:layout_marginEnd="12dp"
-        android:src="@drawable/ic_bookmark_border_black_24dp" />
 
 </RelativeLayout>

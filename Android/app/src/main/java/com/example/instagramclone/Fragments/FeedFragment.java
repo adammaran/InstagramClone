@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -72,6 +73,7 @@ public class FeedFragment extends Fragment {
             @Override
             public void onResponse(Call<ArrayList<FeedItemModel>> call, Response<ArrayList<FeedItemModel>> response) {
                 feedList = response.body();
+                Collections.reverse(feedList);
                 Log.d(TAG, getToken());
                 initData(v);
             }

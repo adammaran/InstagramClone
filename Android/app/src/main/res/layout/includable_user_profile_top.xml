@@ -48,6 +48,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/stats_followers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -74,6 +75,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/stats_following"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

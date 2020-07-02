@@ -124,21 +124,20 @@ public class AddPostActivity extends AppCompatActivity {
         RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(imageUri)), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
         RequestBody description = RequestBody.create(MultipartBody.FORM, captionText.getText().toString());
+        RequestBody location = RequestBody.create(MultipartBody.FORM, postItem.getLocationString());
 
         postItem.setDescription(captionText.getText().toString());
         Log.d(TAG, postItem.getLocationString());
-        Call<FeedItemModel> call = feedApi.postFeedItem(getToken(), body, description);
+        Call<FeedItemModel> call = feedApi.postFeedItem(getToken(), body, description, location);
         call.enqueue(new Callback<FeedItemModel>() {
             @Override
             public void onResponse(Call<FeedItemModel> call, Response<FeedItemModel> response) {
                 Log.d(TAG, "image uploaded");
-                new MainActivity().startActivity(new Intent(getBaseContext(), MainActivity.class));
             }
 
             @Override
             public void onFailure(Call<FeedItemModel> call, Throwable t) {
                 Log.d(TAG, "Error while uploading image");
-                new MainActivity().startActivity(new Intent(getBaseContext(), MainActivity.class));
                 t.printStackTrace();
             }
         });

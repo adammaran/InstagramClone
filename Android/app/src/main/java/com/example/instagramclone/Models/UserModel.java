@@ -16,8 +16,8 @@ public class UserModel {
     @SerializedName("password")
     private String password;
 
-    @SerializedName("avatarURL")
-    private String avatarURL;
+    @SerializedName("avatar")
+    private ImageBufferModel avatarURL;
 
     @SerializedName("fullName")
     private String fullName;
@@ -37,7 +37,7 @@ public class UserModel {
         this.password = password;
     }
 
-    public UserModel(String userName, String email, String password, String avatarURL, String fullName, String bio, int postCount, int followerCount, int followingCount) {
+    public UserModel(String userName, String email, String password, ImageBufferModel avatarURL, String fullName, String bio, int postCount, int followerCount, int followingCount) {
         this.userName = userName;
         this.email = email;
         this.password = password;
@@ -88,11 +88,11 @@ public class UserModel {
         this.password = password;
     }
 
-    public String getAvatarURL() {
+    public ImageBufferModel getAvatarURL() {
         return avatarURL;
     }
 
-    public void setAvatarURL(String avatarURL) {
+    public void setAvatarURL(ImageBufferModel avatarURL) {
         this.avatarURL = avatarURL;
     }
 

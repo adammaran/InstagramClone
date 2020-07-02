@@ -1,6 +1,8 @@
 package com.example.instagramclone.Adapters.ViewHolders;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +29,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedPlaceHolder> {
     @Override
     public FeedPlaceHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feed_post, parent, false);
-
         return new FeedPlaceHolder(view);
     }
 

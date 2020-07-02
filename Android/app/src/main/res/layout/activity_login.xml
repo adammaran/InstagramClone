@@ -8,35 +8,48 @@
     android:orientation="vertical"
     tools:context=".Activities.LoginActivity">
 
-    <EditText
-        android:id="@+id/login_username"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/username"
-        android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorGray" />
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="200dp"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/login_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/password"
-        android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorGray" />
+        <EditText
+            android:id="@+id/login_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorPrimaryDark"
+            android:textColorHint="@color/colorGray" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/login_btn_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_cta_bg"
-        android:text="@string/login" />
+        <EditText
+            android:id="@+id/login_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textColor="@color/colorPrimaryDark"
 
-    <TextView
-        android:id="@+id/login_text_signin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/sign_up"
-        android:textColor="@color/colorDarkBlue"
-        android:textStyle="bold" />
+            android:textColorHint="@color/colorGray" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/login_btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_cta_bg"
+            android:text="@string/login" />
+
+        <TextView
+            android:id="@+id/login_text_signin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12sp"
+            android:text="@string/sign_up"
+            android:textAlignment="center"
+            android:textColor="@color/cta_blue"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </LinearLayout>

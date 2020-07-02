@@ -1,5 +1,8 @@
 package com.example.instagramclone.Fragments;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,19 +14,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.instagramclone.Activities.EditProfileActivity;
 import com.example.instagramclone.Activities.MainActivity;
+import com.example.instagramclone.Adapters.ViewHolders.FollowersAdapter;
 import com.example.instagramclone.Adapters.ViewHolders.PostsAdapter;
 import com.example.instagramclone.Api.UserApi;
 import com.example.instagramclone.Common.APIClient;
+import com.example.instagramclone.Models.CurrentUserModel;
 import com.example.instagramclone.Models.FeedItemModel;
-import com.example.instagramclone.Models.UserModel;
+import com.example.instagramclone.Models.FollowerModel;
 import com.example.instagramclone.Models.UserObjModel;
 import com.example.instagramclone.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -37,7 +43,8 @@ public class UserProfileFragment extends Fragment {
     private RecyclerView postRecycler;
     private ImageView avatar;
     private TextView postCount, followerCount, followingCount, profileName, profileDesc;
-    private LinearLayout gotoProfile;
+    private Button followButton, editProfileButton, followingButton;
+    private LinearLayout toFollowers, toFollowing;
 
     private UserObjModel user;
 
@@ -85,6 +92,12 @@ public class UserProfileFragment extends Fragment {
         profileName = view.findViewById(R.id.user_profile_name);
         profileDesc = view.findViewById(R.id.user_profile_description);
         postRecycler = view.findViewById(R.id.user_profile_post_recycler);
+        followButton = view.findViewById(R.id.user_profile_follow_btn);
+        editProfileButton = view.findViewById(R.id.user_profile_edit_profile);
+        followingButton = view.findViewById(R.id.user_profile_following_profile);
+        toFollowers = view.findViewById(R.id.stats_followers);
+        toFollowing = view.findViewById(R.id.stats_following);
+
     }
 
     private void getUserByID(View v) {
@@ -123,10 +136,96 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void initData(View view) {
+        if (user.getUser().getUserID().equals(CurrentUserModel.getInstance().getUserID())) {
+            followButton.setVisibility(View.GONE);
+            editProfileButton.setVisibility(View.VISIBLE);
+        } else {
+            checkIfFollowing();
+        }
+
+        editProfileButton.setOnClickListener(view13 -> {
+            startActivity(new Intent(getContext(), EditProfileActivity.class));
+        });
+
+        followButton.setOnClickListener(view1 -> {
+            followUser();
+        });
+        followingButton.setOnClickListener(view12 -> {
+            unfollowUser();
+        });
+
+        toFollowers.setOnClickListener(view15 -> {
+            MainActivity main = (MainActivity) view.getContext();
+            main.loadFragment(new FollowersFragment(user.getUser().getUserID(), 0));
+        });
+
+        toFollowing.setOnClickListener(view14 -> {
+            MainActivity main = (MainActivity) view.getContext();
+            main.loadFragment(new FollowersFragment(user.getUser().getUserID(), 1));
+        });
+
         GridLayoutManager grid = new GridLayoutManager(view.getContext(), 3);
         postRecycler.setLayoutManager(grid);
         postRecycler.setAdapter(new PostsAdapter(currentUserPostList));
+    }
 
+    private void followUser() {
+        Call<String> call = userApi.followUser("/api/users/follow/" + user.getUser().getUserID(), getToken());
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful())
+                    Log.d(TAG, response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void unfollowUser() {
+        Call<String> call = userApi.unfollowUser("/api/users/unfollow/" + user.getUser().getUserID(), getToken());
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void checkIfFollowing() {
+        Call<ArrayList<FollowerModel>> call = userApi.getFollowingList("/api/users/following/" + CurrentUserModel.getInstance().getUserID(), getToken());
+        call.enqueue(new Callback<ArrayList<FollowerModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<FollowerModel>> call, Response<ArrayList<FollowerModel>> response) {
+                for (FollowerModel followerModel : response.body()) {
+                    if (followerModel.getID() != null) {
+                        if (followerModel.getID().equals(user.getUser().getUserID())) {
+                            setProfileToIsFollowing();
+                            Log.d(TAG, "EE JA RADIM");
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<FollowerModel>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void setProfileToIsFollowing() {
+        followingButton.setVisibility(View.VISIBLE);
+        followButton.setVisibility(View.GONE);
+        editProfileButton.setVisibility(View.GONE);
     }
 
     private void getCurrentUserObject(View v) {
@@ -150,7 +249,11 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void setUserObject() {
-        Picasso.get().load(user.getUser().getAvatarURL()).placeholder(R.drawable.default_avatar).into(avatar);
+        if (user.getUser().getAvatarURL() != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(user.getUser().getAvatarURL().getData(), 0, user.getUser().getAvatarURL().getData().length);
+            avatar.setImageBitmap(bitmap);
+        }
+
         profileName.setText(user.getUser().getFullName());
         profileDesc.setText(user.getUser().getBio());
 

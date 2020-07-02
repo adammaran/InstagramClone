@@ -30,6 +30,7 @@ import com.example.instagramclone.Fragments.UserProfileFragment;
 import com.example.instagramclone.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -102,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
         PopupMenu popupMenu = new PopupMenu(getApplicationContext(), menuButton);
         popupMenu.getMenuInflater().inflate(R.menu.side_slide_settings_menu, popupMenu.getMenu());
         popupMenu.getMenu().getItem(0).setOnMenuItemClickListener(item -> {
+            startActivity(new Intent(this, EditProfileActivity.class));
+
             return false;
         });
         popupMenu.getMenu().getItem(1).setOnMenuItemClickListener(item -> {

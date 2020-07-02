@@ -68,13 +68,26 @@
                         android:textColor="@color/colorPrimary" />
 
                     <Button
-                        android:id="@+id/user_profile_message_btn"
+                        android:id="@+id/user_profile_edit_profile"
                         android:layout_width="match_parent"
                         android:layout_height="28dp"
+                        android:layout_marginEnd="6dp"
                         android:layout_weight="1"
                         android:background="@drawable/button_cta_bg"
-                        android:text="Message"
-                        android:textColor="@color/colorPrimary" />
+                        android:text="Edit Profile"
+                        android:textColor="@color/colorPrimary"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/user_profile_following_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_following"
+                        android:text="Following"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
